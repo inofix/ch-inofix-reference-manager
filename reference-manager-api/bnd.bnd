@@ -1,0 +1,8 @@
+Bundle-SymbolicName: ch.inofix.referencemanager.api 
+Bundle-Version: 1.0.0
+Export-Package:\
+    ch.inofix.referencemanager.constants,\
+    ch.inofix.referencemanager.exception,\
+    ch.inofix.referencemanager.model,\
+    ch.inofix.referencemanager.service,\
+    ch.inofix.referencemanager.service.persistence
