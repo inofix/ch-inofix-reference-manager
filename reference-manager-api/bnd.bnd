@@ -1,3 +1,4 @@
+Bundle-Name: Inofix Reference Manager API
 Bundle-SymbolicName: ch.inofix.referencemanager.api 
 Bundle-Version: 1.0.0
 Export-Package:\
