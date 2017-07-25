@@ -4,8 +4,8 @@
     service.xml: ORM Configuration of the reference manager. 
 
     Created:    2016-01-03 16:50 by Christian Berndt 
-    Modified:   2017-02-15 22:38 by Christian Berndt 
-    Version:    1.1.2
+    Modified:   2017-07-14 13:33 by Christian Berndt 
+    Version:    1.1.3
 -->
 <!DOCTYPE service-builder 
     PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" 
@@ -15,7 +15,7 @@
 
     <author>Christian Berndt</author>
 
-    <namespace>Inofix</namespace>
+    <namespace>inofix_rm</namespace>
     
     <entity local-service="true" name="Bibliography" remote-service="true"
         uuid="true">
