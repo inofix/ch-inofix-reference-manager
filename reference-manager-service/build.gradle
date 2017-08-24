@@ -13,7 +13,9 @@ dependencies {
 
 buildService {
     apiDir = "../reference-manager-api/src/main/java"
-    osgiModule = true
-    propsUtil = "ch.inofix.referencemanager.service.util.PropsUtil"
-//    testDir = "../reference-manager-test/src/testIntegration/java"
+//    osgiModule = true
+//    propsUtil = "ch.inofix.referencemanager.service.util.PropsUtil"
+    testDir = "../reference-manager-test/src/testIntegration/java"
 }
+
+group = "ch.inofix.referencemanager"
