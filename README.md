@@ -1,6 +1,6 @@
 # ch-inofix-reference-manager
 
-<a href="https://travis-ci.org/inofix/ch-inofix-reference-manager" target="_blank"><img src="https://travis-ci.org/inofix/ch-inofix-reference-manager.svg?branch=master"/></a>
+<a href="https://travis-ci.org/inofix/ch-inofix-reference-manager/builds" target="_blank"><img src="https://travis-ci.org/inofix/ch-inofix-reference-manager.svg?branch=master"/></a>
 
 A BibTeX compliant reference manager for Liferay.
 
