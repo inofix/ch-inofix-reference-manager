@@ -1,0 +1,22 @@
+dist: trusty
+
+sudo: required
+
+addons:
+  firefox: "44.0"
+
+language: java
+
+jdk:
+  - oraclejdk8
+
+install: true
+
+before_script:
+  - mv standalone-gradle.properties gradle.properties
+
+script:
+  - ./gradlew clean initBundle buildService testIntegration
+
+after_script:
+  - ruby ./scripts/publish-gh-pages.rb
