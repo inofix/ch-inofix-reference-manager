@@ -47,4 +47,15 @@ You may have to restart Eclipse, too in order to have your JSPs validated.
 
 ## How To Test
 
-TODO
+### In the Liferay workspace
+
+1. Select ch-inofix-reference-manager -> verification -> testIntegration task from Gradle Tasks
+1. Run
+
+### Standalone 
+
+1. `cd ch-inofix-reference-manager`
+1. `./gradlew clean initBundle buildService testIntegration`
+
+Latest Travis-test-results for ch-inofix-reference-manager can be obtained from https://travis-ci.org/inofix/ch-inofix-reference-manager/builds
+
