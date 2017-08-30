@@ -56,6 +56,7 @@ You may have to restart Eclipse, too in order to have your JSPs validated.
 
 1. `cd ch-inofix-reference-manager`
 1. `ln -s standalone-gradle.properties gradle.properties`
+1. `ln -s standalone-settings.gradle settings.gradle`
 1. `./gradlew clean initBundle buildService testIntegration`
 
 Latest Travis-test-results for ch-inofix-reference-manager can be obtained from https://travis-ci.org/inofix/ch-inofix-reference-manager/builds
