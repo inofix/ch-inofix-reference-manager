@@ -1,9 +1,9 @@
 <%--
-    user_bibliographies: display a user's bibliographies.
+    user_bibliographies.jsp: display a user's bibliographies.
     
     Created:    2016-12-16 00:12 by Christian Berndt
-    Modified:   2017-02-13 22:56 by Christian Berndt
-    Version:    1.0.4
+    Modified:   2017-09-06 22:10 by Christian Berndt
+    Version:    1.0.5
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -106,9 +106,11 @@
 <%
     liferayPortletRequest.setAttribute("redirect", currentURL);
     String editBibliographyURL = ""; 
-    
-    PortletURL addURL = assetRendererFactory
-            .getURLAdd(liferayPortletRequest, liferayPortletResponse);
+ 
+    // TODO: fix broken assetRendererFactory lookup.
+    PortletURL addURL = null;
+//     PortletURL addURL = assetRendererFactory
+//             .getURLAdd(liferayPortletRequest, liferayPortletResponse);
     
     if (addURL != null) {
         editBibliographyURL = addURL.toString(); 
