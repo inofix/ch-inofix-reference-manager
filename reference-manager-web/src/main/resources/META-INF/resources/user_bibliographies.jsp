@@ -2,8 +2,8 @@
     user_bibliographies.jsp: display a user's bibliographies.
     
     Created:    2016-12-16 00:12 by Christian Berndt
-    Modified:   2017-09-06 22:10 by Christian Berndt
-    Version:    1.0.5
+    Modified:   2017-09-11 18:10 by Christian Berndt
+    Version:    1.0.6
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -107,10 +107,8 @@
     liferayPortletRequest.setAttribute("redirect", currentURL);
     String editBibliographyURL = ""; 
  
-    // TODO: fix broken assetRendererFactory lookup.
-    PortletURL addURL = null;
-//     PortletURL addURL = assetRendererFactory
-//             .getURLAdd(liferayPortletRequest, liferayPortletResponse);
+    PortletURL addURL = assetRendererFactory
+            .getURLAdd(liferayPortletRequest, liferayPortletResponse);
     
     if (addURL != null) {
         editBibliographyURL = addURL.toString(); 

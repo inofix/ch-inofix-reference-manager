@@ -32,12 +32,15 @@ import ch.inofix.referencemanager.service.permission.ReferencePermission;
  * 
  * @author Christian Berndt
  * @created 2016-11-18 21:49
- * @modified 2017-01-16 23:00
- * @version 1.0.2
+ * @modified 2017-09-11 18:14
+ * @version 1.0.3
  *
  */
-@Component(immediate = true, property = {
-        "javax.portlet.name=" + PortletKeys.REFERENCE_MANAGER }, service = AssetRendererFactory.class)
+@Component(
+    immediate = true, 
+    property = {"javax.portlet.name=" + PortletKeys.REFERENCE_MANAGER }, 
+    service = AssetRendererFactory.class
+)
 public class ReferenceAssetRendererFactory extends BaseAssetRendererFactory<Reference> {
 
     public static final String TYPE = "reference";
@@ -111,7 +114,7 @@ public class ReferenceAssetRendererFactory extends BaseAssetRendererFactory<Refe
         return ReferencePermission.contains(permissionChecker, reference.getReferenceId(), actionId);
     }
 
-    @org.osgi.service.component.annotations.Reference(target = "(osgi.web.symbolicname=reference-manager-web)", unbind = "-")
+    @org.osgi.service.component.annotations.Reference(target = "(osgi.web.symbolicname=ch.inofix.timetracker.web)", unbind = "-")
     public void setServletContext(ServletContext servletContext) {
         _servletContext = servletContext;
     }
