@@ -2,8 +2,8 @@
     your_bibliographies.jsp: Default view of the your-bibliographies-portlet.
     
     Created:    2016-11-29 22:52 by Christian Berndt
-    Modified:   2017-09-06 21:42 by Christian Berndt
-    Version:    1.1.2
+    Modified:   2017-09-11 18:12 by Christian Berndt
+    Version:    1.1.3
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -37,7 +37,6 @@
     bibliographySearch.setResults(bibliographies);
     bibliographySearch.setTotal(hits.getLength());
 
-    // TODO: fix assetRendererFactory lookup
     AssetRendererFactory<Bibliography> assetRendererFactory = AssetRendererFactoryRegistryUtil
             .getAssetRendererFactoryByClass(Bibliography.class);
 %>
@@ -54,14 +53,14 @@
             liferayPortletRequest.setAttribute("redirect", currentURL);
             String editBibliographyURL = "";
 
-//             PortletURL addURL = assetRendererFactory.getURLAdd(liferayPortletRequest, liferayPortletResponse);
+            PortletURL addURL = assetRendererFactory.getURLAdd(liferayPortletRequest, liferayPortletResponse);
 
-//             if (addURL != null) {
-//                 editBibliographyURL = addURL.toString();
-//             } else {
-//                 // GUEST user
-//                 hasAddPermission = false;
-//             }
+            if (addURL != null) {
+                editBibliographyURL = addURL.toString();
+            } else {
+                // GUEST user
+                hasAddPermission = false;
+            }
             
             String manageURL = null; 
             
@@ -137,4 +136,3 @@
     </c:if>
 
 </div>
-

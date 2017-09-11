@@ -35,28 +35,35 @@ import ch.inofix.referencemanager.service.permission.BibliographyPermission;
  * 
  * @author Christian Berndt
  * @created 2016-12-01 12:56
- * @modified 2016-12-15 17:28
- * @version 1.0.4
+ * @modified 2017-09-11 18:13
+ * @version 1.0.5
  *
  */
-@Component(immediate = true, property = {
-        "javax.portlet.name=" + PortletKeys.BIBLIOGRAPHY_MANAGER }, service = AssetRendererFactory.class)
+@Component(
+    immediate = true, 
+    property = {"javax.portlet.name=" + PortletKeys.BIBLIOGRAPHY_MANAGER }, 
+    service = AssetRendererFactory.class
+)
 public class BibliographyAssetRendererFactory extends BaseAssetRendererFactory<Bibliography> {
 
     public static final String TYPE = "bibliography";
 
     public BibliographyAssetRendererFactory() {
+                
+        setCategorizable(true);
         setClassName(Bibliography.class.getName());
         setLinkable(true);
         setPortletId(PortletKeys.BIBLIOGRAPHY_MANAGER);
         setSearchable(true);
+        setSelectable(true);
+
     }
 
     @Override
     public AssetRenderer<Bibliography> getAssetRenderer(long classPK, int type) throws PortalException {
-
+        
         Bibliography bibliography = _bibliographyLocalService.getBibliography(classPK);
-
+        
         BibliographyAssetRenderer bibliographyAssetRenderer = new BibliographyAssetRenderer(bibliography);
 
         bibliographyAssetRenderer.setAssetRendererType(type);
@@ -88,8 +95,7 @@ public class BibliographyAssetRendererFactory extends BaseAssetRendererFactory<B
 
         if (group != null) {
 
-            long portletPlid = PortalUtil.getPlidFromPortletId(group.getGroupId(), false,
-                    PortletKeys.BIBLIOGRAPHY_MANAGER);
+            long portletPlid = PortalUtil.getPlidFromPortletId(group.getGroupId(), false, PortletKeys.BIBLIOGRAPHY_MANAGER);
 
             PortletURL portletURL = PortletURLFactoryUtil.create(liferayPortletRequest,
                     PortletKeys.BIBLIOGRAPHY_MANAGER, portletPlid, PortletRequest.RENDER_PHASE);
@@ -127,7 +133,7 @@ public class BibliographyAssetRendererFactory extends BaseAssetRendererFactory<B
         return BibliographyPermission.contains(permissionChecker, bibliography.getBibliographyId(), actionId);
     }
 
-    @Reference(target = "(osgi.web.symbolicname=reference-manager-web)", unbind = "-")
+    @Reference(target = "(osgi.web.symbolicname=ch.inofix.timetracker.web)", unbind = "-")
     public void setServletContext(ServletContext servletContext) {
         _servletContext = servletContext;
     }
