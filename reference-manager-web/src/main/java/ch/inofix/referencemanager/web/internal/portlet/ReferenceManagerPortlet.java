@@ -54,7 +54,6 @@ import ch.inofix.referencemanager.constants.PortletKeys;
 import ch.inofix.referencemanager.exception.NoSuchReferenceException;
 import ch.inofix.referencemanager.model.Reference;
 import ch.inofix.referencemanager.service.ReferenceService;
-import ch.inofix.referencemanager.setup.SampleDataUtil;
 import ch.inofix.referencemanager.web.configuration.ReferenceManagerConfiguration;
 import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
 
@@ -63,15 +62,15 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
  * 
  * @author Christian Berndt
  * @created 2016-04-10 22:32
- * @modified 2017-02-13 22:20
- * @version 1.1.3
+ * @modified 2017-09-11 18:44
+ * @version 1.1.4
  */
 @Component(
     configurationPid = "ch.inofix.referencemanager.web.configuration.ReferenceManagerConfiguration",
     immediate = true, 
     property = { 
         "com.liferay.portlet.add-default-resource=true",
-        "com.liferay.portlet.css-class-wrapper=reference-manager-portlet",
+        "com.liferay.portlet.css-class-wrapper=portlet-reference-manager",
         "com.liferay.portlet.display-category=category.inofix", 
         "com.liferay.portlet.header-portlet-css=/css/main.css",
         "com.liferay.portlet.instanceable=false", 
@@ -187,19 +186,6 @@ public class ReferenceManagerPortlet extends MVCPortlet {
         }
     }
 
-    /**
-     * 
-     * @param actionRequest
-     * @param actionResponse
-     * @since 1.0.7
-     * @throws Exception
-     */
-    public void importSampleData(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
-
-        SampleDataUtil.importSampleData();
-
-    }
-    
     @Activate
     @Modified
     protected void activate(Map<Object, Object> properties) {
