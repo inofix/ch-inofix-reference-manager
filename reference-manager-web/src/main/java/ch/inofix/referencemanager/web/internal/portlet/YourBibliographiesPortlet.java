@@ -18,11 +18,11 @@ import ch.inofix.referencemanager.service.BibliographyService;
  * 
  * @author Christian Berndt
  * @created 2016-12-01 02:02
- * @modified 2016-12-15 22:00
- * @version 1.0.2
+ * @modified 2017-09-11 18:44
+ * @version 1.0.3
  */
 @Component(immediate = true, property = { "com.liferay.portlet.add-default-resource=true",
-        "com.liferay.portlet.css-class-wrapper=your-bibliographies-portlet",
+        "com.liferay.portlet.css-class-wrapper=portlet-your-bibliographies",
         "com.liferay.portlet.display-category=category.inofix", "com.liferay.portlet.header-portlet-css=/css/main.css",
         "com.liferay.portlet.instanceable=false", "javax.portlet.init-param.template-path=/",
         "javax.portlet.init-param.view-template=/your_bibliographies.jsp",

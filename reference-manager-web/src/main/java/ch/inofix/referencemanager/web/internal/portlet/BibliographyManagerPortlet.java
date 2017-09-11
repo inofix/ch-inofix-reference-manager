@@ -62,15 +62,15 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
  * 
  * @author Christian Berndt
  * @created 2016-11-29 22:33
- * @modified 2017-02-13 22:50
- * @version 1.2.5
+ * @modified 2017-09-11 18:43
+ * @version 1.2.6
  */
 @Component(
     configurationPid = "ch.inofix.referencemanager.web.configuration.BibliographyManagerConfiguration",
     immediate = true, 
     property = { 
         "com.liferay.portlet.add-default-resource=true",
-        "com.liferay.portlet.css-class-wrapper=bibliography-manager-portlet",
+        "com.liferay.portlet.css-class-wrapper=portlet-bibliography-manager",
         "com.liferay.portlet.display-category=category.inofix", 
         "com.liferay.portlet.header-portlet-css=/css/main.css",
         "com.liferay.portlet.instanceable=false", 
