@@ -35,8 +35,8 @@ import ch.inofix.referencemanager.service.permission.BibliographyPermission;
  * 
  * @author Christian Berndt
  * @created 2016-12-01 12:56
- * @modified 2017-09-11 18:13
- * @version 1.0.5
+ * @modified 2017-09-12 23:46
+ * @version 1.0.6
  *
  */
 @Component(
@@ -133,7 +133,7 @@ public class BibliographyAssetRendererFactory extends BaseAssetRendererFactory<B
         return BibliographyPermission.contains(permissionChecker, bibliography.getBibliographyId(), actionId);
     }
 
-    @Reference(target = "(osgi.web.symbolicname=ch.inofix.timetracker.web)", unbind = "-")
+    @Reference(target = "(osgi.web.symbolicname=ch.inofix.referencemanager.web)", unbind = "-")
     public void setServletContext(ServletContext servletContext) {
         _servletContext = servletContext;
     }

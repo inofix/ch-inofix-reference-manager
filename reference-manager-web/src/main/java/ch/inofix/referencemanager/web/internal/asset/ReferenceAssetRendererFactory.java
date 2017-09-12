@@ -114,7 +114,7 @@ public class ReferenceAssetRendererFactory extends BaseAssetRendererFactory<Refe
         return ReferencePermission.contains(permissionChecker, reference.getReferenceId(), actionId);
     }
 
-    @org.osgi.service.component.annotations.Reference(target = "(osgi.web.symbolicname=ch.inofix.timetracker.web)", unbind = "-")
+    @org.osgi.service.component.annotations.Reference(target = "(osgi.web.symbolicname=ch.inofix.referencemanager.web)", unbind = "-")
     public void setServletContext(ServletContext servletContext) {
         _servletContext = servletContext;
     }
