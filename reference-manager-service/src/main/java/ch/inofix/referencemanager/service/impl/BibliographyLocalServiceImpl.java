@@ -348,22 +348,6 @@ public class BibliographyLocalServiceImpl extends BibliographyLocalServiceBaseIm
 
     }
 
-    @Override
-    public void updateBibliographyResources(Bibliography bibliography, ModelPermissions modelPermissions)
-            throws PortalException {
-
-        resourceLocalService.updateResources(bibliography.getCompanyId(), bibliography.getGroupId(),
-                Bibliography.class.getName(), bibliography.getBibliographyId(), modelPermissions);
-    }
-
-    @Override
-    public void updateBibliographyResources(Bibliography bibliography, String[] groupPermissions,
-            String[] guestPermissions) throws PortalException {
-
-        resourceLocalService.updateResources(bibliography.getCompanyId(), bibliography.getGroupId(),
-                Bibliography.class.getName(), bibliography.getBibliographyId(), groupPermissions, guestPermissions);
-    }
-
     protected void validate(long groupId, String urlTitle) throws PortalException {
         if (Validator.isNull(urlTitle)) {
             throw new BibliographyUrlTitleException();
