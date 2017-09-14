@@ -56,7 +56,6 @@ import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.service.permission.ModelPermissions;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -93,8 +92,8 @@ import ch.inofix.referencemanager.social.ReferenceActivityKeys;
  * @author Brian Wing Shun Chan
  * @author Christian Berndt
  * @created 2016-03-28 17:08
- * @modified 2017-02-15 22:33
- * @version 1.0.9
+ * @modified 2017-09-14 10:48
+ * @version 1.1.0
  * @see ReferenceLocalServiceBaseImpl
  * @see ch.inofix.referencemanager.service.ReferenceLocalServiceUtil
  */
@@ -179,13 +178,7 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
         // Resources
 
-        if (serviceContext.isAddGroupPermissions() || serviceContext.isAddGuestPermissions()) {
-
-            addReferenceResources(reference, serviceContext.isAddGroupPermissions(),
-                    serviceContext.isAddGuestPermissions());
-        } else {
-            addReferenceResources(reference, serviceContext.getModelPermissions());
-        }
+        resourceLocalService.addModelResources(reference, serviceContext);
 
         // Asset
 
@@ -210,38 +203,6 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
         return addReference(userId, bibTeX, new long[0], serviceContext);
 
-    }
-
-    @Override
-    public void addReferenceResources(Reference reference, boolean addGroupPermissions, boolean addGuestPermissions)
-            throws PortalException {
-
-        resourceLocalService.addResources(reference.getCompanyId(), reference.getGroupId(), reference.getUserId(),
-                Reference.class.getName(), reference.getReferenceId(), false, addGroupPermissions, addGuestPermissions);
-    }
-
-    @Override
-    public void addReferenceResources(Reference reference, ModelPermissions modelPermissions) throws PortalException {
-
-        resourceLocalService.addModelResources(reference.getCompanyId(), reference.getGroupId(), reference.getUserId(),
-                Reference.class.getName(), reference.getReferenceId(), modelPermissions);
-    }
-
-    @Override
-    public void addReferenceResources(long referenceId, boolean addGroupPermissions, boolean addGuestPermissions)
-            throws PortalException {
-
-        Reference reference = referencePersistence.findByPrimaryKey(referenceId);
-
-        addReferenceResources(reference, addGroupPermissions, addGuestPermissions);
-    }
-
-    @Override
-    public void addReferenceResources(long referenceId, ModelPermissions modelPermissions) throws PortalException {
-
-        Reference reference = referencePersistence.findByPrimaryKey(referenceId);
-
-        addReferenceResources(reference, modelPermissions);
     }
 
     @Override
@@ -304,9 +265,9 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
     @Override
     public Reference deleteReference(long referenceId) throws PortalException {
         Reference reference = referencePersistence.findByPrimaryKey(referenceId);
-        
+
         bibRefRelationLocalService.deleteByReferenceId(referenceId);
-        
+
         refRefRelationLocalService.deleteByReferenceId(referenceId);
 
         return referenceLocalService.deleteReference(reference);
@@ -466,9 +427,9 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
             Document document = hits.doc(0);
             long referenceId1 = GetterUtil.getLong(document.get(Field.CLASS_PK));
-            
+
             _log.info("referenceId1 = " + referenceId1);
-            
+
             refRefRelationLocalService.addRefRefRelation(reference.getUserId(), referenceId1,
                     reference.getReferenceId(), new ServiceContext());
 
