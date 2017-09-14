@@ -704,22 +704,6 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
     }
 
-    @Override
-    public void updateReferenceResources(Reference reference, ModelPermissions modelPermissions)
-            throws PortalException {
-
-        resourceLocalService.updateResources(reference.getCompanyId(), reference.getGroupId(),
-                Reference.class.getName(), reference.getReferenceId(), modelPermissions);
-    }
-
-    @Override
-    public void updateReferenceResources(Reference reference, String[] groupPermissions, String[] guestPermissions)
-            throws PortalException {
-
-        resourceLocalService.updateResources(reference.getCompanyId(), reference.getGroupId(),
-                Reference.class.getName(), reference.getReferenceId(), groupPermissions, guestPermissions);
-    }
-
     @ServiceReference(type = BackgroundTaskManager.class)
     protected BackgroundTaskManager backgroundTaskmanager;
 
