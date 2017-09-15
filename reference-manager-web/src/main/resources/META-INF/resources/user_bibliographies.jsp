@@ -2,8 +2,8 @@
     user_bibliographies.jsp: display a user's bibliographies.
     
     Created:    2016-12-16 00:12 by Christian Berndt
-    Modified:   2017-09-11 18:10 by Christian Berndt
-    Version:    1.0.6
+    Modified:   2017-09-15 11:26 by Christian Berndt
+    Version:    1.0.7
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -74,7 +74,7 @@
 <liferay-ui:search-container
     cssClass="bibliographies-search-container"  
     emptyResultsMessage="the-user-hasnt-created-any-bibliographies-yet"          
-    id="references"
+    id="references"    
     searchContainer="<%= bibliographySearch %>"
     var="bibliographySearchContainer">
     
@@ -88,18 +88,32 @@
             <portlet:param name="bibliographyId"
                 value="<%=String.valueOf(bibliography.getBibliographyId())%>" />
         </portlet:renderURL>
-    
-        <liferay-ui:search-container-column-text href="<%=viewURL%>"
-            orderable="true"
-            orderableProperty="title_sortable"
-            property="title" valign="middle" />
+
+        <liferay-ui:search-container-column-text orderable="true"
+            orderableProperty="title_sortable" valign="middle">
+
+            <aui:a cssClass="bibliography-title" href="<%=viewURL%>"
+                label="<%=bibliography.getTitle()%>" />
+                
+            <div class="description"><%=bibliography.getDescription()%></div>
             
-        <liferay-ui:search-container-column-jsp cssClass="entry-action"
+            <liferay-ui:asset-tags-summary
+                className="<%=Bibliography.class.getName()%>"
+                classPK="<%=bibliography.getBibliographyId()%>" />
+                
+            <liferay-ui:ratings 
+                className="<%=Bibliography.class.getName()%>"
+                classPK="<%=bibliography.getBibliographyId()%>" 
+                type="stars" />
+
+        </liferay-ui:search-container-column-text>
+
+        <liferay-ui:search-container-column-jsp align="right" cssClass="entry-action"
               path="/bibliography/bibliography_action.jsp" valign="top" />
 
     </liferay-ui:search-container-row>
 
-    <liferay-ui:search-iterator/>
+    <liferay-ui:search-iterator markupView="<%= markupView  %>"/>
                 
 </liferay-ui:search-container>
 
