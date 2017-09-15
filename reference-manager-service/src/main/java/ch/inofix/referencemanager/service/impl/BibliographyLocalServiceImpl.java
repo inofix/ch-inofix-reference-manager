@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.permission.ModelPermissions;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -63,8 +62,8 @@ import ch.inofix.referencemanager.social.BibliographyActivityKeys;
  *
  * @author Christian Berndt
  * @created 2016-11-29 21:27
- * @modified 2017-02-06 22:33
- * @version 1.0.6
+ * @modified 2017-09-14 10:48
+ * @version 1.0.7
  * @see BibliographyLocalServiceBaseImpl
  * @see ch.inofix.referencemanager.service.BibliographyLocalServiceUtil
  */
@@ -111,13 +110,7 @@ public class BibliographyLocalServiceImpl extends BibliographyLocalServiceBaseIm
 
         // Resources
 
-        if (serviceContext.isAddGroupPermissions() || serviceContext.isAddGuestPermissions()) {
-
-            addBibliographyResources(bibliography, serviceContext.isAddGroupPermissions(),
-                    serviceContext.isAddGuestPermissions());
-        } else {
-            addBibliographyResources(bibliography, serviceContext.getModelPermissions());
-        }
+        resourceLocalService.addModelResources(bibliography, serviceContext);
 
         // Asset
 
@@ -135,42 +128,6 @@ public class BibliographyLocalServiceImpl extends BibliographyLocalServiceBaseIm
 
         return bibliography;
 
-    }
-
-    @Override
-    public void addBibliographyResources(Bibliography bibliography, boolean addGroupPermissions,
-            boolean addGuestPermissions) throws PortalException {
-
-        resourceLocalService.addResources(bibliography.getCompanyId(), bibliography.getGroupId(),
-                bibliography.getUserId(), Bibliography.class.getName(), bibliography.getBibliographyId(), false,
-                addGroupPermissions, addGuestPermissions);
-    }
-
-    @Override
-    public void addBibliographyResources(Bibliography bibliography, ModelPermissions modelPermissions)
-            throws PortalException {
-
-        resourceLocalService.addModelResources(bibliography.getCompanyId(), bibliography.getGroupId(),
-                bibliography.getUserId(), Bibliography.class.getName(), bibliography.getBibliographyId(),
-                modelPermissions);
-    }
-
-    @Override
-    public void addBibliographyResources(long bibliographyId, boolean addGroupPermissions, boolean addGuestPermissions)
-            throws PortalException {
-
-        Bibliography bibliography = bibliographyPersistence.findByPrimaryKey(bibliographyId);
-
-        addBibliographyResources(bibliography, addGroupPermissions, addGuestPermissions);
-    }
-
-    @Override
-    public void addBibliographyResources(long bibliographyId, ModelPermissions modelPermissions)
-            throws PortalException {
-
-        Bibliography bibliography = bibliographyPersistence.findByPrimaryKey(bibliographyId);
-
-        addBibliographyResources(bibliography, modelPermissions);
     }
 
     @Indexable(type = IndexableType.DELETE)
@@ -299,16 +256,15 @@ public class BibliographyLocalServiceImpl extends BibliographyLocalServiceBaseIm
         User user = userPersistence.findByPrimaryKey(userId);
 
         Bibliography bibliography = bibliographyPersistence.findByPrimaryKey(bibliographyId);
-        
+
         long groupId = serviceContext.getScopeGroupId();
 
         if (!bibliography.getUrlTitle().equals(urlTitle)) {
-            
+
             // modified urlTitle
-            
-            validate(groupId, urlTitle);            
+
+            validate(groupId, urlTitle);
         }
-        
 
         bibliography.setUuid(serviceContext.getUuid());
         bibliography.setGroupId(groupId);

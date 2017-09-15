@@ -2,8 +2,8 @@
     init.jsp: Common setup code for the reference manager portlet.
     
     Created:    2016-01-10 22:51 by Christian Berndt
-    Modified:   2017-02-13 21:59 by Christian Berndt
-    Version:    1.2.4
+    Modified:   2017-09-15 11:34 by Christian Berndt
+    Version:    1.2.5
 --%>
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -89,6 +89,8 @@
     PortletURL portletURL = renderResponse.createRenderURL();
 
     String currentURL = portletURL.toString();
+    
+    String markupView = "lexicon";
 
     BibliographyManagerConfiguration bibliographyManagerConfiguration = (BibliographyManagerConfiguration) renderRequest
             .getAttribute(BibliographyManagerConfiguration.class.getName());

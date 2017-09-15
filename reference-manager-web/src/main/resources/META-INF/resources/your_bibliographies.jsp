@@ -116,9 +116,9 @@
             <%
                 AssetRenderer<Bibliography> assetRenderer = assetRendererFactory
                             .getAssetRenderer(bibliography.getBibliographyId());
-                    String viewURL = assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse,
-                            currentURL);
-                    String editURL = assetRenderer.getURLEdit(liferayPortletRequest, liferayPortletResponse).toString();
+                String viewURL = assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse,
+                        currentURL);
+                String editURL = assetRenderer.getURLEdit(liferayPortletRequest, liferayPortletResponse).toString();
             %> 
             
             <a href="<%=viewURL%>"><%=bibliography.getTitle()%></a>
