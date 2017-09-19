@@ -2,8 +2,8 @@
     bibliography_action.jsp: The action menu of the bibliography manager's default view.
     
     Created:    2017-01-25 11:42 by Christian Berndt
-    Modified:   2017-01-25 11:42 by Christian Berndt
-    Version:    1.0.0
+    Modified:   2017-09-15 13:18 by Christian Berndt
+    Version:    1.0.1
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -28,7 +28,7 @@
 %>
 
 
-<liferay-ui:icon-menu icon="" message=""
+<liferay-ui:icon-menu icon=""
     showWhenSingleIcon="true">
 
     <c:if test="<%=BibliographyPermission.contains(permissionChecker, bibliography,
