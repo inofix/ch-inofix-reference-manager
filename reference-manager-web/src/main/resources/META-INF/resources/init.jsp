@@ -2,8 +2,8 @@
     init.jsp: Common setup code for the reference manager portlet.
     
     Created:    2016-01-10 22:51 by Christian Berndt
-    Modified:   2017-09-15 11:34 by Christian Berndt
-    Version:    1.2.5
+    Modified:   2017-09-19 22:01 by Christian Berndt
+    Version:    1.2.6
 --%>
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -17,7 +17,6 @@
 
 <%@page import="ch.inofix.referencemanager.constants.BibliographyActionKeys"%>
 <%@page import="ch.inofix.referencemanager.constants.ReferenceActionKeys"%>
-<%@page import="ch.inofix.referencemanager.constants.SearchColumns"%>
 <%@page import="ch.inofix.referencemanager.model.Bibliography"%>
 <%@page import="ch.inofix.referencemanager.model.Reference"%>
 <%@page import="ch.inofix.referencemanager.service.permission.BibliographyManagerPortletPermission"%>

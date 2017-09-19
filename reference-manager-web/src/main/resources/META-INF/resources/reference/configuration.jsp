@@ -15,7 +15,8 @@
         columns = portletPreferences.getValues("columns", referenceManagerConfiguration.columns());
     }
 
-    String allColumns = SearchColumns.REFERENCE_SEARCH_COLUMNS;
+    ReferenceSearch searchContainer = new ReferenceSearch(liferayPortletRequest, portletURL);
+    List<String> headerNames = searchContainer.getHeaderNames();
 %>
 
 <liferay-portlet:actionURL portletConfiguration="<%= true %>"
@@ -37,7 +38,7 @@
 
         <aui:fieldset collapsible="<%=true%>" label="show-columns">
             <%
-                Set<String> availableColumns = SetUtil.fromArray(StringUtil.split(allColumns));
+                Set<String> availableColumns = SetUtil.fromList(headerNames);
 
                 // Left list
 

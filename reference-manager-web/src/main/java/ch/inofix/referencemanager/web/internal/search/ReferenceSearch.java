@@ -28,7 +28,7 @@ import ch.inofix.referencemanager.model.Reference;
  * 
  * @author Christian Berndt
  * @created 2016-11-18 00:58
- * @modified 2016-11-29 14:18
+ * @modified 2017-09-19 22:14
  * @version 1.0.2
  *
  */
@@ -41,12 +41,20 @@ public class ReferenceSearch extends SearchContainer<Reference> {
 
     static {
         headerNames.add("author");
+        headerNames.add("create-date");
+        headerNames.add("modified-date");
+        headerNames.add("reference-id");
         headerNames.add("title");
+        headerNames.add("type");
         headerNames.add("year");
 
-        orderableHeaders.put("author", "author");
-        orderableHeaders.put("title", "title");
-        orderableHeaders.put("year", "year");
+        orderableHeaders.put("author", "author_sortable");
+        orderableHeaders.put("create-date", "createDate_Number_sortable");
+        orderableHeaders.put("modified-date", "modifiedDate_Number_sortable");
+        orderableHeaders.put("reference-id", "referenceId");
+        orderableHeaders.put("title", "title_sortable");
+        orderableHeaders.put("type", "type_sortable");
+        orderableHeaders.put("year", "year_sortable");
 
     }
 
