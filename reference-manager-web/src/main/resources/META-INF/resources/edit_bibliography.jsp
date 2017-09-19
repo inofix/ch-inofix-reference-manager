@@ -2,11 +2,13 @@
     edit_bibliography.jsp: default view of the bibliography manaager portlet.
     
     Created:    2016-11-30 00:18 by Christian Berndt
-    Modified:   2017-01-22 21:19 by Christian Berndt
-    Version:    1.0.7
+    Modified:   2017-09-19 12:00 by Christian Berndt
+    Version:    1.0.8
 --%>
 
 <%@ include file="/init.jsp"%>
+
+<%@page import="com.liferay.portal.kernel.service.GroupLocalServiceUtil"%>
 
 <%
     String redirect = ParamUtil.getString(request, "redirect");
@@ -14,12 +16,20 @@
     String tabs1 = ParamUtil.getString(request, "tabs1", "settings");
     
     Bibliography bibliography = (Bibliography) request.getAttribute(BibliographyWebKeys.BIBLIOGRAPHY);
+    
+    Group group = null;  
+    
+    String userLink = null;
 
     portletURL.setParameter("mvcPath", "/edit_bibliography.jsp");
 
     boolean hasUpdatePermission = true;
 
     if (bibliography != null) {
+        
+        group = GroupLocalServiceUtil.getGroup(bibliography.getGroupId());  
+        userLink = "<a href=\"" + group.getDisplayURL(themeDisplay) + "\">" + bibliography.getUserName() + "</a>";
+        
         hasUpdatePermission = BibliographyPermission.contains(permissionChecker, bibliography, BibliographyActionKeys.UPDATE);
         tabNames = "browse,import,settings";
         portletURL.setParameter("bibliographyId", String.valueOf(bibliography.getBibliographyId()));
@@ -60,8 +70,10 @@
             <h2><%=bibliography.getTitle()%></h2>
             <div class="clearfix">
                 <div class="compiled-by pull-left">
+
                     <liferay-ui:message key="compiled-by-x"
-                        arguments="<%=new String[] { bibliography.getUserName() }%>" />
+                        arguments="<%=new String[] { userLink }%>" />
+
                 </div>
                 <portlet:resourceURL id="exportBibliography"
                     var="exportBibliographyURL">
