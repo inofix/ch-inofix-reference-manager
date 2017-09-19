@@ -2,8 +2,8 @@
     bibliography_entries.jsp: browse the bibliography's references.
     
     Created:    2016-12-03 15:50 by Christian Berndt
-    Modified:   2017-02-13 23:21 by Christian Berndt
-    Version:    1.1.9
+    Modified:   2017-09-19 12:24 by Christian Berndt
+    Version:    1.2.0
 --%>
 
 <%@ include file="/init.jsp" %>
@@ -120,7 +120,7 @@
 
     </liferay-ui:search-container-row>
 
-    <liferay-ui:search-iterator/>
+    <liferay-ui:search-iterator markupView="<%= markupView %>"/>
                 
 </liferay-ui:search-container>
 
