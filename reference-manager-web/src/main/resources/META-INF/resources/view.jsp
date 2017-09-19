@@ -2,8 +2,8 @@
     view.jsp: Default view of the reference manager portlet.
     
     Created:    2016-01-10 22:51 by Christian Berndt
-    Modified:   2017-02-13 22:14 by Christian Berndt
-    Version:    1.1.8
+    Modified:   2017-09-19 22:26 by Christian Berndt
+    Version:    1.1.9
 --%>
 
 <%@ include file="/init.jsp" %>
@@ -93,7 +93,7 @@
 
 			</liferay-ui:search-container-row>
 
-            <liferay-ui:search-iterator/>
+            <liferay-ui:search-iterator markupView="<%= markupView %>"/>
             			
 		</liferay-ui:search-container>
 	</c:otherwise>
