@@ -38,7 +38,7 @@ import ch.inofix.referencemanager.service.permission.ReferencePermission;
  */
 @Component(
     immediate = true, 
-    property = {"javax.portlet.name=" + PortletKeys.REFERENCE_MANAGER }, 
+    property = {"javax.portlet.name=" + PortletKeys.REFERENCE_MANAGER },
     service = AssetRendererFactory.class
 )
 public class ReferenceAssetRendererFactory extends BaseAssetRendererFactory<Reference> {
@@ -90,8 +90,8 @@ public class ReferenceAssetRendererFactory extends BaseAssetRendererFactory<Refe
 
             long portletPlid = PortalUtil.getPlidFromPortletId(group.getGroupId(), false, PortletKeys.REFERENCE_EDITOR);
 
-            PortletURL portletURL = PortletURLFactoryUtil.create(liferayPortletRequest,
-                    PortletKeys.REFERENCE_EDITOR, portletPlid, PortletRequest.RENDER_PHASE);
+            PortletURL portletURL = PortletURLFactoryUtil.create(liferayPortletRequest, PortletKeys.REFERENCE_EDITOR,
+                    portletPlid, PortletRequest.RENDER_PHASE);
 
             String redirect = (String) liferayPortletRequest.getAttribute("redirect");
 
