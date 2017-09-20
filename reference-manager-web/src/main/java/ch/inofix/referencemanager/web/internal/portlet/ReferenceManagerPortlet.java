@@ -44,6 +44,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -62,13 +63,12 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
  * 
  * @author Christian Berndt
  * @created 2016-04-10 22:32
- * @modified 2017-09-11 18:44
- * @version 1.1.4
+ * @modified 2017-09-19 22:31
+ * @version 1.1.5
  */
-@Component(
-    configurationPid = "ch.inofix.referencemanager.web.configuration.ReferenceManagerConfiguration",
+@Component(configurationPid = "ch.inofix.referencemanager.web.configuration.ReferenceManagerConfiguration", 
     immediate = true, 
-    property = { 
+    property = {
         "com.liferay.portlet.add-default-resource=true",
         "com.liferay.portlet.css-class-wrapper=portlet-reference-manager",
         "com.liferay.portlet.display-category=category.inofix", 
@@ -84,61 +84,15 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
 )
 public class ReferenceManagerPortlet extends MVCPortlet {
 
-    /**
-     * 
-     * @param actionRequest
-     * @param actionResponse
-     * @since 1.0.4
-     * @throws Exception
-     */
-    public void deleteAllReferences(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+    @Override
+    public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
+            throws IOException, PortletException {
 
-        String tabs1 = ParamUtil.getString(actionRequest, "tabs1");
+        renderRequest.setAttribute(ReferenceManagerConfiguration.class.getName(), _referenceManagerConfiguration);
 
-        List<Reference> references = _referenceService.deleteReferences();
-
-        SessionMessages.add(actionRequest, REQUEST_PROCESSED,
-                PortletUtil.translate("successfully-deleted-x-references", references.size()));
-
-        actionResponse.setRenderParameter("tabs1", tabs1);
+        super.doView(renderRequest, renderResponse);
     }
-
-    /**
-     * 
-     * @param actionRequest
-     * @param actionResponse
-     * @since 1.0.8
-     * @throws Exception
-     */
-    public void deleteGroupReferences(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
-
-        String tabs1 = ParamUtil.getString(actionRequest, "tabs1");
-
-        ServiceContext serviceContext = ServiceContextFactory.getInstance(Reference.class.getName(), actionRequest);
-
-        List<Reference> references = _referenceService.deleteGroupReferences(serviceContext.getScopeGroupId());
-
-        SessionMessages.add(actionRequest, REQUEST_PROCESSED,
-                PortletUtil.translate("successfully-deleted-x-references", references.size()));
-
-        actionResponse.setRenderParameter("tabs1", tabs1);
-    }
-
-    /**
-     * 
-     * @param actionRequest
-     * @param actionResponse
-     * @since 1.0.0
-     * @throws Exception
-     */
-    public void deleteReference(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
-
-        long referenceId = ParamUtil.getLong(actionRequest, "referenceId");
-
-        _referenceService.deleteReference(referenceId);
-        
-    }
-
+    
     /**
      * 
      * @param actionRequest
@@ -186,11 +140,96 @@ public class ReferenceManagerPortlet extends MVCPortlet {
         }
     }
 
+    @Override
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
+
+        String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
+
+        _log.info("processAction()");
+        _log.info("cmd = " + cmd);
+        
+        try {
+            if (cmd.equals(Constants.DELETE)) {
+                
+                deleteReference(actionRequest, actionResponse);
+
+            } else if (cmd.equals("deleteGroupReferences")) {
+                
+                deleteGroupReferences(actionRequest, actionResponse);
+
+            }
+        } catch (Exception e) {
+
+            // TODO: improve error handling
+            _log.error(e);
+            
+//            throw new Exception(e);
+
+        }
+    }
+
     @Activate
     @Modified
     protected void activate(Map<Object, Object> properties) {
         _referenceManagerConfiguration = Configurable.createConfigurable(ReferenceManagerConfiguration.class,
                 properties);
+    }
+
+    /**
+     * 
+     * @param actionRequest
+     * @param actionResponse
+     * @since 1.0.4
+     * @throws Exception
+     */
+    protected void deleteAllReferences(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+
+        String tabs1 = ParamUtil.getString(actionRequest, "tabs1");
+
+        List<Reference> references = _referenceService.deleteReferences();
+
+        SessionMessages.add(actionRequest, REQUEST_PROCESSED,
+                PortletUtil.translate("successfully-deleted-x-references", references.size()));
+
+        actionResponse.setRenderParameter("tabs1", tabs1);
+    }
+
+    /**
+     * 
+     * @param actionRequest
+     * @param actionResponse
+     * @since 1.0.8
+     * @throws Exception
+     */
+    protected void deleteGroupReferences(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+
+        String tabs1 = ParamUtil.getString(actionRequest, "tabs1");
+
+        ServiceContext serviceContext = ServiceContextFactory.getInstance(Reference.class.getName(), actionRequest);
+
+        List<Reference> references = _referenceService.deleteGroupReferences(serviceContext.getScopeGroupId());
+
+        SessionMessages.add(actionRequest, REQUEST_PROCESSED,
+                PortletUtil.translate("successfully-deleted-x-references", references.size()));
+
+        actionResponse.setRenderParameter("tabs1", tabs1);
+    }
+
+    /**
+     * 
+     * @param actionRequest
+     * @param actionResponse
+     * @since 1.0.0
+     * @throws Exception
+     */
+    protected void deleteReference(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+        
+        _log.info("deleteReference()");
+
+        long referenceId = ParamUtil.getLong(actionRequest, "referenceId");
+
+        _referenceService.deleteReference(referenceId);
+
     }
 
     /**
@@ -207,16 +246,8 @@ public class ReferenceManagerPortlet extends MVCPortlet {
             super.doDispatch(renderRequest, renderResponse);
         }
     }
-    
-    @Override
-    public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
-            throws IOException, PortletException {
-        
-        renderRequest.setAttribute(ReferenceManagerConfiguration.class.getName(),
-                _referenceManagerConfiguration);
 
-        super.doView(renderRequest, renderResponse);
-    }
+
 
     @org.osgi.service.component.annotations.Reference
     protected void setReferenceService(ReferenceService referenceService) {
