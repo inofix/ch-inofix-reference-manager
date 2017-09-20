@@ -2,8 +2,8 @@
     reference_action.jsp: The action menu of the reference manager's default view.
     
     Created:    2016-11-29 18:51 by Christian Berndt
-    Modified:   2017-02-04 17:26 by Christian Berndt
-    Version:    1.0.4
+    Modified:   2017-09-19 22:38 by Christian Berndt
+    Version:    1.0.5
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -55,13 +55,15 @@
     
     <c:if test="<%=ReferencePermission.contains(permissionChecker, reference, ReferenceActionKeys.DELETE)%>">
 
-        <portlet:actionURL var="deleteURL" name="deleteReference">
-            <c:if test="<%= bibliography != null %>">
+        <portlet:actionURL var="deleteURL">
+            <c:if test="<%=bibliography != null%>">
                 <portlet:param name="bibliographyId"
-                    value="<%=String.valueOf(bibliography.getBibliographyId())%>" />                
-            </c:if>  
+                    value="<%=String.valueOf(bibliography.getBibliographyId())%>" />
+            </c:if>
             <portlet:param name="referenceId"
                 value="<%=String.valueOf(reference.getReferenceId())%>" />
+            <portlet:param name="<%=Constants.CMD%>"
+                value="<%=Constants.DELETE%>" />
         </portlet:actionURL>
 
         <liferay-ui:icon-delete label="true" url="<%=deleteURL%>" />

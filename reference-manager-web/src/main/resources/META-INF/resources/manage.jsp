@@ -2,8 +2,8 @@
     manage.jsp: The manage-gui of the reference manager portlet.
     
     Created:    2016-01-20 22:59 by Christian Berndt
-    Modified:   2016-12-14 18:51 by Christian Berndt
-    Version:    1.0.2
+    Modified:   2017-09-19 15:37 by Christian Berndt
+    Version:    1.0.3
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -22,7 +22,8 @@
     var="deleteGroupReferencesURL" />
 
 <aui:form action="<%=deleteGroupReferencesURL%>" name="fm1">
-
+ 
+    <aui:input name="<%= Constants.CMD %>" type="hidden" value="deleteGroupReferences"/>
     <aui:input name="tabs1" type="hidden" value="<%=tabs1%>" />
 
     <aui:button-row>
