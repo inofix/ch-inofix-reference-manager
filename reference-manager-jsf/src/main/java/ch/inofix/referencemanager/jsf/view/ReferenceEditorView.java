@@ -63,8 +63,8 @@ import ch.inofix.referencemanager.service.util.BibliographyUtil;
  * 
  * @author Christian Berndt
  * @created 2017-01-03 14:34
- * @modified 2017-02-04 17:19
- * @version 1.2.3
+ * @modified 2017-09-21 12:02
+ * @version 1.2.4
  *
  */
 @ManagedBean
@@ -240,10 +240,13 @@ public class ReferenceEditorView {
 
         try {
             if (_reference.getReferenceId() > 0) {
+            	// TODO: use remote service
                 _reference = ReferenceLocalServiceUtil.updateReference(_reference.getReferenceId(), userId, _bibTeX,
                         bibliographyIds, serviceContext);
             } else {
-                _reference = ReferenceServiceUtil.addReference(userId, _bibTeX, bibliographyIds, serviceContext);
+            	// TODO: re-enable remote service
+                _reference = ReferenceLocalServiceUtil.addReference(userId, _bibTeX, bibliographyIds, serviceContext);
+//                _reference = ReferenceServiceUtil.addReference(userId, _bibTeX, bibliographyIds, serviceContext);
             }
             _bibTeX = _reference.getBibTeX();
             FacesMessage msg = new FacesMessage("Saved Reference");
