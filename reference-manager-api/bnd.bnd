@@ -1,9 +1,13 @@
 Bundle-Name: Inofix Reference Manager API
-Bundle-SymbolicName: ch.inofix.referencemanager.api 
+Bundle-SymbolicName: ch.inofix.referencemanager.api
 Bundle-Version: 1.0.0
 Export-Package:\
     ch.inofix.referencemanager.constants,\
     ch.inofix.referencemanager.exception,\
-    ch.inofix.referencemanager.model,\
-    ch.inofix.referencemanager.service,\
-    ch.inofix.referencemanager.service.persistence
+	ch.inofix.referencemanager.model,\
+	ch.inofix.referencemanager.service,\
+	ch.inofix.referencemanager.service.persistence,\
+    org.jbibtex.*
+Include-Resource: \
+    @jbibtex-1.0.15.jar
+-includeresource: META-INF/service.xml=../reference-manager-service/service.xml

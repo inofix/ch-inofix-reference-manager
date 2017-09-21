@@ -1,12 +1,10 @@
 Bundle-Name: Inofix Reference Manager Service
-Bundle-SymbolicName: ch.inofix.referencemanager.service 
+Bundle-SymbolicName: ch.inofix.referencemanager.service
 Bundle-Version: 1.0.0
 Export-Package:\
     ch.inofix.referencemanager.model.impl,\
     ch.inofix.referencemanager.search,\
     ch.inofix.referencemanager.service.permission,\
-    ch.inofix.referencemanager.service.util,\
-    org.jbibtex
+    ch.inofix.referencemanager.service.util
 Liferay-Require-SchemaVersion: 1.0.0
 Liferay-Service: true
-Include-Resource: @jbibtex-1.0.15.jar  
