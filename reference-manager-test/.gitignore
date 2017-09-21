@@ -1,6 +1,5 @@
-/target/
+/build/
+/bin/
 /.classpath
 /.project
 /.settings/
-/bin/
-/build/
