@@ -49,8 +49,8 @@ import ch.inofix.referencemanager.service.permission.ReferencePermission;
  *
  * @author Christian Berndt
  * @created 2016-03-28 17:08
- * @modified 2017-02-14 22:03
- * @version 1.1.2
+ * @modified 2017-09-27 19:32
+ * @version 1.1.3
  * @see ReferenceServiceBaseImpl
  * @see ch.inofix.referencemanager.service.ReferenceServiceUtil
  */
@@ -73,12 +73,12 @@ public class ReferenceServiceImpl extends ReferenceServiceBaseImpl {
      * @since 1.0.0
      * @throws PortalException
      */
-    public Reference addReference(long userId, String bibTeX, ServiceContext serviceContext) throws PortalException {
+    public Reference addReference(String bibTeX, ServiceContext serviceContext) throws PortalException {
 
         ReferenceEditorPortletPermission.check(getPermissionChecker(), serviceContext.getScopeGroupId(),
                 ReferenceActionKeys.ADD_REFERENCE);
 
-        return referenceLocalService.addReference(userId, bibTeX, serviceContext);
+        return referenceLocalService.addReference(getUserId(), bibTeX, serviceContext);
     }
 
     /**
@@ -91,13 +91,13 @@ public class ReferenceServiceImpl extends ReferenceServiceBaseImpl {
      * @since 1.0.4
      * @throws PortalException
      */
-    public Reference addReference(long userId, String bibTeX, long[] bibliographyIds, ServiceContext serviceContext)
+    public Reference addReference(String bibTeX, long[] bibliographyIds, ServiceContext serviceContext)
             throws PortalException {
 
         ReferenceEditorPortletPermission.check(getPermissionChecker(), serviceContext.getScopeGroupId(),
                 ReferenceActionKeys.ADD_REFERENCE);
 
-        return referenceLocalService.addReference(userId, bibTeX, bibliographyIds, serviceContext);
+        return referenceLocalService.addReference(getUserId(), bibTeX, bibliographyIds, serviceContext);
     }
 
     /**
@@ -251,12 +251,12 @@ public class ReferenceServiceImpl extends ReferenceServiceBaseImpl {
      * @since 1.0.0
      * @throws PortalException
      */
-    public Reference updateReference(long referenceId, long userId, String bibTeX, ServiceContext serviceContext)
+    public Reference updateReference(long referenceId, String bibTeX, ServiceContext serviceContext)
             throws PortalException {
 
         ReferencePermission.check(getPermissionChecker(), referenceId, ActionKeys.UPDATE);
 
-        return referenceLocalService.updateReference(referenceId, userId, bibTeX, serviceContext);
+        return referenceLocalService.updateReference(referenceId, getUserId(), bibTeX, serviceContext);
     }
 
     /**

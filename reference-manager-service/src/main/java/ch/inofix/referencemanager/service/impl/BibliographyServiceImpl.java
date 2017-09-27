@@ -52,8 +52,8 @@ import ch.inofix.referencemanager.service.permission.BibliographyPermission;
  *
  * @author Christian Berndt
  * @created 2016-11-29 21:27
- * @modified 2017-01-22 17:55
- * @version 1.0.6
+ * @modified 2017-09-27 19:34
+ * @version 1.0.7
  * @see BibliographyServiceBaseImpl
  * @see ch.inofix.referencemanager.service.BibliographyServiceUtil
  */
@@ -77,13 +77,13 @@ public class BibliographyServiceImpl extends BibliographyServiceBaseImpl {
      * @since 1.0.0
      * @throws PortalException
      */
-    public Bibliography addBibliography(long userId, String title, String description, String urlTitle, String comments,
+    public Bibliography addBibliography(String title, String description, String urlTitle, String comments,
             String preamble, String strings, ServiceContext serviceContext) throws PortalException {
 
         BibliographyManagerPortletPermission.check(getPermissionChecker(), serviceContext.getScopeGroupId(),
                 BibliographyActionKeys.ADD_BIBLIOGRAPHY);
 
-        return bibliographyLocalService.addBibliography(userId, title, description, urlTitle, comments, preamble,
+        return bibliographyLocalService.addBibliography(getUserId(), title, description, urlTitle, comments, preamble,
                 strings, serviceContext);
     }
 
@@ -236,13 +236,13 @@ public class BibliographyServiceImpl extends BibliographyServiceBaseImpl {
      * @since 1.0.0
      * @throws PortalException
      */
-    public Bibliography updateBibliography(long bibliographyId, long userId, String title, String description,
+    public Bibliography updateBibliography(long bibliographyId, String title, String description,
             String urlTitle, String comments, String preamble, String strings, ServiceContext serviceContext)
             throws PortalException {
 
         BibliographyPermission.check(getPermissionChecker(), bibliographyId, ActionKeys.UPDATE);
 
-        return bibliographyLocalService.updateBibliography(bibliographyId, userId, title, description, urlTitle,
+        return bibliographyLocalService.updateBibliography(bibliographyId, getUserId(), title, description, urlTitle,
                 comments, preamble, strings, serviceContext);
     }
 
