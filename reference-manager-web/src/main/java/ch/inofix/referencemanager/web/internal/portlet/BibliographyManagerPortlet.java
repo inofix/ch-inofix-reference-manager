@@ -62,8 +62,8 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
  * 
  * @author Christian Berndt
  * @created 2016-11-29 22:33
- * @modified 2017-09-27 19:40
- * @version 1.2.7
+ * @modified 2017-09-28 01:01
+ * @version 1.2.8
  */
 @Component(
     configurationPid = "ch.inofix.referencemanager.web.configuration.BibliographyManagerConfiguration",
@@ -318,7 +318,7 @@ public class BibliographyManagerPortlet extends MVCPortlet {
 
         String fileName = bibliography.getTitle() + ".bib";
 
-        Hits hits = _referenceService.search(themeDisplay.getUserId(), 0, null, bibliography.getBibliographyId(), 0,
+        Hits hits = _referenceService.search(themeDisplay.getUserId(), 0, bibliography.getBibliographyId(), null, 0,
                 Integer.MAX_VALUE, null);
 
         StringBuilder sb = new StringBuilder();

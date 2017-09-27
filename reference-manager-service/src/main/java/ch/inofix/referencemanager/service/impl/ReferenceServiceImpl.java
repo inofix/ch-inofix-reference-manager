@@ -49,8 +49,8 @@ import ch.inofix.referencemanager.service.permission.ReferencePermission;
  *
  * @author Christian Berndt
  * @created 2016-03-28 17:08
- * @modified 2017-09-27 20:37
- * @version 1.1.5
+ * @modified 2017-09-28 01:01
+ * @version 1.1.6
  * @see ReferenceServiceBaseImpl
  * @see ch.inofix.referencemanager.service.ReferenceServiceUtil
  */
@@ -194,10 +194,10 @@ public class ReferenceServiceImpl extends ReferenceServiceBaseImpl {
      * @param end
      * @param sort
      */
-    public Hits search(long userId, long groupId, String keywords, long bibliographyId, int start, int end, Sort sort)
+    public Hits search(long userId, long groupId, long bibliographyId, String keywords, int start, int end, Sort sort)
             throws PortalException {
 
-        return referenceLocalService.search(userId, groupId, keywords, bibliographyId, start, end, sort);
+        return referenceLocalService.search(userId, groupId, bibliographyId, keywords, start, end, sort);
 
     }
 

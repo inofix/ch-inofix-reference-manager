@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,25 +42,25 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -92,8 +93,8 @@ import ch.inofix.referencemanager.social.ReferenceActivityKeys;
  * @author Brian Wing Shun Chan
  * @author Christian Berndt
  * @created 2016-03-28 17:08
- * @modified 2017-09-14 10:48
- * @version 1.1.0
+ * @modified 2017-09-28 01:00
+ * @version 1.1.1
  * @see ReferenceLocalServiceBaseImpl
  * @see ch.inofix.referencemanager.service.ReferenceLocalServiceUtil
  */
@@ -110,6 +111,8 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
     @Override
     public Reference addReference(long userId, String bibTeX, long[] bibliographyIds, ServiceContext serviceContext)
             throws PortalException {
+        
+        _log.info("addReference");
 
         // Reference
 
@@ -152,6 +155,7 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
         long globalGroupId = company.getGroupId();
 
         if (reference.getGroupId() != globalGroupId) {
+            
             match(reference);
         }
 
@@ -415,27 +419,22 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
     public void match(Reference reference) throws PortalException {
 
+        _log.info("match");
+
         long companyId = reference.getCompanyId();
         Company company = CompanyLocalServiceUtil.getCompany(companyId);
         long globalGroupId = company.getGroupId();
 
-        Hits hits = search(companyId, globalGroupId, reference.getTitle());
+        Hits hits = search(reference.getUserId(), globalGroupId, -1, null, reference.getTitle(), null,
+                WorkflowConstants.STATUS_ANY, null, false, 0, 20, null);
 
         _log.info("hits.getLength() = " + hits.getLength());
 
-        if (hits.getLength() > 0) {
-
-            Document document = hits.doc(0);
-            long referenceId1 = GetterUtil.getLong(document.get(Field.CLASS_PK));
-
-            _log.info("referenceId1 = " + referenceId1);
-
-            refRefRelationLocalService.addRefRefRelation(reference.getUserId(), referenceId1,
-                    reference.getReferenceId(), new ServiceContext());
-
-        } else {
+        if (hits.getLength() == 0) {
 
             // not yet in the global references
+
+            _log.info("not yet in the global references ");
 
             // TODO: strip the private fields from the reference
             String bibTeX = reference.getBibTeX();
@@ -455,87 +454,50 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
         return getReference(referenceId);
     }
 
-    public Hits search(long companyId, long groupId, String referenceTitle) {
-        try {
+    @Override
+    public Hits search(long userId, long groupId, long bibliographyId, String keywords, int start, int end, Sort sort)
+            throws PortalException {
 
-            Indexer<Reference> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Reference.class);
-
-            SearchContext searchContext = new SearchContext();
-
-            searchContext.setAttribute(Field.STATUS, WorkflowConstants.STATUS_ANY);
-
-            searchContext.setAttribute("paginationType", "more");
-
-            searchContext.setCompanyId(companyId);
-
-            if (groupId > 0) {
-                searchContext.setGroupIds(new long[] { groupId });
-            }
-
-            if (Validator.isNotNull(referenceTitle)) {
-                searchContext.setAttribute("referenceTitle", referenceTitle);
-            }
-
-            return indexer.search(searchContext);
-
-        } catch (Exception e) {
-            throw new SystemException(e);
+        if (sort == null) {
+            sort = new Sort(Field.MODIFIED_DATE, true);
         }
+
+        String author = null;
+        String title = null;
+        String year = null;
+
+        boolean andOperator = false;
+
+        if (Validator.isNotNull(keywords)) {
+
+            author = keywords;
+            title = keywords;
+            year = keywords;
+
+        } else {
+            andOperator = true;
+        }
+
+        return search(userId, groupId, bibliographyId, author, title, year, WorkflowConstants.STATUS_ANY, null, andOperator, start, end,
+                sort);
+
     }
 
-    /**
-     * 
-     * @param companyId
-     * @param groupId
-     * @param userId
-     * @param keywords
-     * @param bibliographyId
-     * @param start
-     * @param end
-     * @param sort
-     * @return
-     */
-    public Hits search(long userId, long groupId, String keywords, long bibliographyId, int start, int end, Sort sort) {
+    @Override
+    public Hits search(long userId, long groupId, long bibliographyId, String author, String title, String year, int status,
+            LinkedHashMap<String, Object> params, boolean andSearch, int start, int end, Sort sort)
+            throws PortalException {
 
-        try {
-
-            Indexer<Reference> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Reference.class);
-
-            SearchContext searchContext = new SearchContext();
-
-            if (Validator.isNotNull(keywords)) {
-                searchContext.setKeywords(keywords);
-            }
-
-            searchContext.setAttribute(Field.STATUS, WorkflowConstants.STATUS_ANY);
-
-            searchContext.setAttribute("paginationType", "more");
-
-            User user = UserLocalServiceUtil.getUser(userId);
-
-            searchContext.setCompanyId(user.getCompanyId());
-
-            searchContext.setEnd(end);
-            if (groupId > 0) {
-                searchContext.setGroupIds(new long[] { groupId });
-            }
-            searchContext.setSorts(sort);
-            searchContext.setStart(start);
-            searchContext.setUserId(userId);
-
-            if (bibliographyId > 0) {
-                searchContext.setAttribute("bibliographyId", bibliographyId);
-            }
-
-            if (sort == null) {
-                sort = new Sort(Field.MODIFIED_DATE, true);
-            }
-
-            return indexer.search(searchContext);
-
-        } catch (Exception e) {
-            throw new SystemException(e);
+        if (sort == null) {
+            sort = new Sort(Field.MODIFIED_DATE, true);
         }
+
+        Indexer<Reference> indexer = IndexerRegistryUtil.getIndexer(Reference.class.getName());
+
+        SearchContext searchContext = buildSearchContext(userId, groupId, author, title, year, status, params,
+                andSearch, start, end, sort);
+
+        return indexer.search(searchContext);
     }
 
     @Override
@@ -581,6 +543,8 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
     @Indexable(type = IndexableType.REINDEX)
     public Reference updateReference(long referenceId, long userId, String bibTeX, long[] bibliographyIds,
             ServiceContext serviceContext) throws PortalException {
+
+        _log.info("updateReference");
 
         // Reference
 
@@ -663,6 +627,67 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
         return reference;
 
+    }
+
+    protected SearchContext buildSearchContext(long userId, long groupId, String author, String title, String year,
+            int status, LinkedHashMap<String, Object> params, boolean andSearch, int start, int end, Sort sort)
+            throws PortalException {
+
+        SearchContext searchContext = new SearchContext();
+
+        searchContext.setAttribute(Field.STATUS, status);
+
+        if (Validator.isNotNull(author)) {
+            searchContext.setAttribute("author", author);
+        }
+
+        if (Validator.isNotNull(title)) {
+            searchContext.setAttribute("title", title);
+        }
+
+        if (Validator.isNotNull(year)) {
+            searchContext.setAttribute("year", year);
+        }
+
+        searchContext.setAttribute("paginationType", "more");
+
+        Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+        searchContext.setCompanyId(group.getCompanyId());
+
+        searchContext.setEnd(end);
+        if (groupId > 0) {
+            searchContext.setGroupIds(new long[] { groupId });
+        }
+        searchContext.setSorts(sort);
+        searchContext.setStart(start);
+        searchContext.setUserId(userId);
+
+        searchContext.setAndSearch(andSearch);
+
+        if (params != null) {
+
+            String keywords = (String) params.remove("keywords");
+
+            if (Validator.isNotNull(keywords)) {
+                searchContext.setKeywords(keywords);
+            }
+        }
+
+        QueryConfig queryConfig = new QueryConfig();
+
+        queryConfig.setHighlightEnabled(false);
+        queryConfig.setScoreEnabled(false);
+
+        searchContext.setQueryConfig(queryConfig);
+
+        if (sort != null) {
+            searchContext.setSorts(sort);
+        }
+
+        searchContext.setStart(start);
+
+        return searchContext;
     }
 
     @ServiceReference(type = BackgroundTaskManager.class)
