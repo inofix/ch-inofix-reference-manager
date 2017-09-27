@@ -49,8 +49,8 @@ import ch.inofix.referencemanager.service.permission.ReferencePermission;
  *
  * @author Christian Berndt
  * @created 2016-03-28 17:08
- * @modified 2017-09-27 19:32
- * @version 1.1.3
+ * @modified 2017-09-27 20:37
+ * @version 1.1.5
  * @see ReferenceServiceBaseImpl
  * @see ch.inofix.referencemanager.service.ReferenceServiceUtil
  */
@@ -98,6 +98,13 @@ public class ReferenceServiceImpl extends ReferenceServiceBaseImpl {
                 ReferenceActionKeys.ADD_REFERENCE);
 
         return referenceLocalService.addReference(getUserId(), bibTeX, bibliographyIds, serviceContext);
+    }
+    
+    @Override
+    public Reference createReference() throws PortalException {
+
+        // Create an empty reference - no permission check required
+        return referenceLocalService.createReference(0);
     }
 
     /**
@@ -270,12 +277,12 @@ public class ReferenceServiceImpl extends ReferenceServiceBaseImpl {
      * @since 1.0.8
      * @throws PortalException
      */
-    public Reference updateReference(long referenceId, long userId, String bibTeX, long[] bibliographyIds,
+    public Reference updateReference(long referenceId, String bibTeX, long[] bibliographyIds,
             ServiceContext serviceContext) throws PortalException {
 
         ReferencePermission.check(getPermissionChecker(), referenceId, ActionKeys.UPDATE);
 
-        return referenceLocalService.updateReference(referenceId, userId, bibTeX, bibliographyIds, serviceContext);
+        return referenceLocalService.updateReference(referenceId, getUserId(), bibTeX, bibliographyIds, serviceContext);
     }
 
     private static final Log _log = LogFactoryUtil.getLog(ReferenceServiceImpl.class);

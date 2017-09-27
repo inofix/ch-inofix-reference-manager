@@ -62,7 +62,7 @@
     <model-resource>
         <model-name>ch.inofix.referencemanager.referenceeditor</model-name>
         <portlet-ref>
-            <portlet-name>referencemanagerjsf_WAR_referencemanagerjsf</portlet-name>
+            <portlet-name>referencemanagerjsf_WAR_chinofixreferencemanagerjsf</portlet-name>
         </portlet-ref>
         <root>true</root>
         <weight>1</weight>

@@ -54,7 +54,6 @@ import ch.inofix.referencemanager.model.Bibliography;
 import ch.inofix.referencemanager.model.Reference;
 import ch.inofix.referencemanager.service.BibRefRelationLocalServiceUtil;
 import ch.inofix.referencemanager.service.BibliographyServiceUtil;
-import ch.inofix.referencemanager.service.ReferenceLocalServiceUtil;
 import ch.inofix.referencemanager.service.ReferenceServiceUtil;
 import ch.inofix.referencemanager.service.util.BibTeXUtil;
 import ch.inofix.referencemanager.service.util.BibliographyUtil;
@@ -63,8 +62,8 @@ import ch.inofix.referencemanager.service.util.BibliographyUtil;
  * 
  * @author Christian Berndt
  * @created 2017-01-03 14:34
- * @modified 2017-09-21 12:02
- * @version 1.2.4
+ * @modified 2017-09-27 19:30
+ * @version 1.2.5
  *
  */
 @ManagedBean
@@ -95,7 +94,13 @@ public class ReferenceEditorView {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             }
         } else {
-            _reference = ReferenceLocalServiceUtil.createReference(0);
+            try {
+                _reference = ReferenceServiceUtil.createReference();
+            } catch (PortalException e) {
+                FacesMessage msg = new FacesMessage("An error occured while creating a new reference.");
+                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
         }
 
         _bibTeX = _reference.getBibTeX();
@@ -228,8 +233,6 @@ public class ReferenceEditorView {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         PortletRequest portletRequest = (PortletRequest) externalContext.getRequest();
         HttpServletRequest request = PortalUtil.getHttpServletRequest(portletRequest);
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long userId = themeDisplay.getUserId();
         ServiceContext serviceContext = ServiceContextFactory.getInstance(Reference.class.getName(), request);
 
         long[] bibliographyIds = new long[0];
@@ -240,13 +243,12 @@ public class ReferenceEditorView {
 
         try {
             if (_reference.getReferenceId() > 0) {
-            	// TODO: use remote service
-                _reference = ReferenceLocalServiceUtil.updateReference(_reference.getReferenceId(), userId, _bibTeX,
+                                
+                _reference = ReferenceServiceUtil.updateReference(_reference.getReferenceId(), _bibTeX,
                         bibliographyIds, serviceContext);
             } else {
-            	// TODO: re-enable remote service
-                _reference = ReferenceLocalServiceUtil.addReference(userId, _bibTeX, bibliographyIds, serviceContext);
-//                _reference = ReferenceServiceUtil.addReference(userId, _bibTeX, bibliographyIds, serviceContext);
+                
+                _reference = ReferenceServiceUtil.addReference(_bibTeX, bibliographyIds, serviceContext);
             }
             _bibTeX = _reference.getBibTeX();
             FacesMessage msg = new FacesMessage("Saved Reference");
