@@ -41,8 +41,8 @@ import ch.inofix.referencemanager.service.ReferenceServiceUtil;
  * 
  * @author Christian Berndt
  * @created 2016-12-17 17:07
- * @modified 2017-01-28 17:44
- * @version 1.1.1
+ * @modified 2017-09-27 19:38
+ * @version 1.1.2
  */
 public class ReferenceImporter {
 
@@ -157,8 +157,8 @@ public class ReferenceImporter {
                 description = bibliography.getDescription();
                 urlTitle = bibliography.getUrlTitle();
 
-                bibliography = BibliographyServiceUtil.updateBibliography(bibliographyId, userId, title, description,
-                        urlTitle, comments.toString(), preamble, strings, serviceContext);
+                bibliography = BibliographyServiceUtil.updateBibliography(bibliographyId, title, description, urlTitle,
+                        comments.toString(), preamble, strings, serviceContext);
             }
 
             _log.info("Start import");
@@ -166,11 +166,11 @@ public class ReferenceImporter {
             Collection<BibTeXEntry> bibTeXEntries = database.getEntries().values();
 
             _log.info("bibTeXEntries.size() = " + bibTeXEntries.size());
-            
+
             if (bibTeXEntries.size() == 0) {
-                
+
                 throw new NoReferencesException();
-                
+
             }
 
             for (BibTeXEntry bibTeXEntry : bibTeXEntries) {
@@ -207,7 +207,7 @@ public class ReferenceImporter {
 
                                 if (updateExisting) {
 
-                                    reference = ReferenceServiceUtil.updateReference(referenceId, userId, bibTeX,
+                                    reference = ReferenceServiceUtil.updateReference(referenceId, bibTeX,
                                             serviceContext);
 
                                     numUpdated++;
@@ -225,8 +225,7 @@ public class ReferenceImporter {
 
                                 numImported++;
 
-                                reference = ReferenceServiceUtil.addReference(userId, bibTeX, bibliographyIds,
-                                        serviceContext);
+                                reference = ReferenceServiceUtil.addReference(bibTeX, bibliographyIds, serviceContext);
 
                             }
 
@@ -240,11 +239,10 @@ public class ReferenceImporter {
 
                             numImported++;
 
-                            reference = ReferenceServiceUtil.addReference(userId, bibTeX, bibliographyIds,
-                                    serviceContext);
+                            reference = ReferenceServiceUtil.addReference(bibTeX, bibliographyIds, serviceContext);
                         }
-                    } 
-                    
+                    }
+
                 } else {
 
                     // no bibshare-id
@@ -253,7 +251,7 @@ public class ReferenceImporter {
 
                     numImported++;
 
-                    reference = ReferenceServiceUtil.addReference(userId, bibTeX, bibliographyIds, serviceContext);
+                    reference = ReferenceServiceUtil.addReference(bibTeX, bibliographyIds, serviceContext);
                 }
 
                 if (numProcessed % 100 == 0 && numProcessed > 0) {

@@ -62,8 +62,8 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
  * 
  * @author Christian Berndt
  * @created 2016-11-29 22:33
- * @modified 2017-09-11 18:43
- * @version 1.2.6
+ * @modified 2017-09-27 19:40
+ * @version 1.2.7
  */
 @Component(
     configurationPid = "ch.inofix.referencemanager.web.configuration.BibliographyManagerConfiguration",
@@ -242,8 +242,6 @@ public class BibliographyManagerPortlet extends MVCPortlet {
 
         ServiceContext serviceContext = ServiceContextFactory.getInstance(Bibliography.class.getName(), actionRequest);
 
-        long userId = serviceContext.getUserId();
-
         Bibliography bibliography = null;
 
         // Only available in imported database, see
@@ -253,10 +251,10 @@ public class BibliographyManagerPortlet extends MVCPortlet {
         String strings = null;
 
         if (bibliographyId <= 0) {
-            bibliography = _bibliographyService.addBibliography(userId, title, description, urlTitle, comments,
-                    preamble, strings, serviceContext);
+            bibliography = _bibliographyService.addBibliography(title, description, urlTitle, comments, preamble,
+                    strings, serviceContext);
         } else {
-            bibliography = _bibliographyService.updateBibliography(bibliographyId, userId, title, description, urlTitle,
+            bibliography = _bibliographyService.updateBibliography(bibliographyId, title, description, urlTitle,
                     comments, preamble, strings, serviceContext);
         }
 
