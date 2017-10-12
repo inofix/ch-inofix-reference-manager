@@ -2,8 +2,8 @@
     bibliography_settings.jsp: edit the bibliography's settings.
     
     Created:    2016-12-01 02:33 by Christian Berndt
-    Modified:   2017-02-06 22:34 by Christian Berndt
-    Version:    1.0.5
+    Modified:   2017-10-12 19:05 by Christian Berndt
+    Version:    1.0.6
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -32,7 +32,9 @@
     }
 %>
 
-<portlet:actionURL name="updateBibliography" var="updateBibliographyURL">
+<portlet:actionURL var="updateBibliographyURL">
+    <portlet:param name="<%=Constants.CMD%>"
+        value="updateBibliography" />
 </portlet:actionURL>
 
 <aui:form action="<%= updateBibliographyURL %>" method="post"

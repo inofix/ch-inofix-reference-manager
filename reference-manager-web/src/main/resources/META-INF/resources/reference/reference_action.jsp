@@ -2,8 +2,8 @@
     reference_action.jsp: The action menu of the reference manager's default view.
     
     Created:    2016-11-29 18:51 by Christian Berndt
-    Modified:   2017-09-19 22:38 by Christian Berndt
-    Version:    1.0.5
+    Modified:   2017-10-12 18:55 by Christian Berndt
+    Version:    1.0.6
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -63,7 +63,7 @@
             <portlet:param name="referenceId"
                 value="<%=String.valueOf(reference.getReferenceId())%>" />
             <portlet:param name="<%=Constants.CMD%>"
-                value="<%=Constants.DELETE%>" />
+                value="deleteReferences" />
         </portlet:actionURL>
 
         <liferay-ui:icon-delete label="true" url="<%=deleteURL%>" />

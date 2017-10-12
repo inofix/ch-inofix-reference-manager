@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
@@ -62,8 +63,8 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
  * 
  * @author Christian Berndt
  * @created 2016-11-29 22:33
- * @modified 2017-09-28 01:01
- * @version 1.2.8
+ * @modified 2017-10-12 18:41
+ * @version 1.2.9
  */
 @Component(
     configurationPid = "ch.inofix.referencemanager.web.configuration.BibliographyManagerConfiguration",
@@ -88,23 +89,6 @@ public class BibliographyManagerPortlet extends MVCPortlet {
      * 
      * @param actionRequest
      * @param actionResponse
-     * @since 1.0.0
-     * @throws Exception
-     */
-    public void deleteBibliography(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
-
-        long bibliographyId = ParamUtil.getLong(actionRequest, "bibliographyId");
-
-        _bibliographyService.deleteBibliography(bibliographyId);
-
-        actionResponse.setRenderParameter("postDelete", "true");
-
-    }
-
-    /**
-     * 
-     * @param actionRequest
-     * @param actionResponse
      * @since 1.1.5
      * @throws Exception
      */
@@ -118,67 +102,52 @@ public class BibliographyManagerPortlet extends MVCPortlet {
         actionResponse.setRenderParameter("bibliographyId", String.valueOf(bibliographyId));
         actionResponse.setRenderParameter("mvcPath", "/edit_bibliography.jsp");
 
-    }
+    }    
+    
+    @Override
+    public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
+            throws IOException, PortletException {
 
+        renderRequest.setAttribute(BibliographyManagerConfiguration.class.getName(),
+                _bibliographyManagerConfiguration);
+
+        super.doView(renderRequest, renderResponse);
+    }
+    
     /**
-     * 
+     *
      * @param actionRequest
      * @param actionResponse
-     * @since 1.1.5
      * @throws Exception
      */
-    public void deleteReference(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+    @Override
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
 
-        long referenceId = ParamUtil.getLong(actionRequest, "referenceId");
+        String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
-        _referenceService.deleteReference(referenceId);
+        try {
+            if (cmd.equals("deleteBibliographies")) {
 
-        String bibliographyId = ParamUtil.getString(actionRequest, "bibliographyId");
+                deleteBibliographies(actionRequest, actionResponse);
 
-        actionResponse.setRenderParameter("bibliographyId", bibliographyId);
-        actionResponse.setRenderParameter("mvcPath", "/edit_bibliography.jsp");
+            } else if (cmd.equals("deleteReferences")) {
 
-    }
+                deleteReferences(actionRequest, actionResponse);
 
-    /**
-     * 
-     * @param actionRequest
-     * @param actionResponse
-     * @since 1.0.0
-     * @throws Exception
-     */
-    public void importBibliography(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+            } else if (cmd.equals("importBibliography")) {
 
-        HttpServletRequest request = PortalUtil.getHttpServletRequest(actionRequest);
+                importBibliography(actionRequest, actionResponse);
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+            } else if (cmd.equals("updateBibliography")) {
 
-        UploadPortletRequest uploadPortletRequest = PortalUtil.getUploadPortletRequest(actionRequest);
+                updateBibliography(actionRequest, actionResponse);
 
-        File file = uploadPortletRequest.getFile("file");
-        String fileName = file.getName();
+            }
+        } catch (Exception e) {
 
-        long userId = themeDisplay.getUserId();
-        long groupId = themeDisplay.getScopeGroupId();
-        boolean privateLayout = themeDisplay.getLayout().isPrivateLayout();
+            _log.error(e, e);
 
-        Map<String, String[]> parameterMap = request.getParameterMap();
-
-        if (Validator.isNotNull(file)) {
-
-            String message = PortletUtil.translate("upload-successfull-import-will-finish-in-a-separate-thread");
-            ServiceContext serviceContext = ServiceContextFactory.getInstance(Reference.class.getName(),
-                    uploadPortletRequest);
-
-            _referenceService.importReferencesInBackground(userId, fileName, groupId, privateLayout, parameterMap, file,
-                    serviceContext);
-
-            SessionMessages.add(actionRequest, "request_processed", message);
-
-        } else {
-
-            SessionErrors.add(actionRequest, "file-not-found");
-
+            SessionErrors.add(actionRequest, e.getClass().getName());
         }
     }
 
@@ -224,48 +193,6 @@ public class BibliographyManagerPortlet extends MVCPortlet {
             throw new PortletException(e);
         }
     }
-
-    /**
-     * 
-     * @param actionRequest
-     * @param actionResponse
-     * @since 1.0.0
-     * @throws Exception
-     */
-    public void updateBibliography(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
-
-        long bibliographyId = ParamUtil.getLong(actionRequest, "bibliographyId");
-
-        String title = ParamUtil.getString(actionRequest, "title");
-        String description = ParamUtil.getString(actionRequest, "description");
-        String urlTitle = ParamUtil.getString(actionRequest, "urlTitle");
-
-        ServiceContext serviceContext = ServiceContextFactory.getInstance(Bibliography.class.getName(), actionRequest);
-
-        Bibliography bibliography = null;
-
-        // Only available in imported database, see
-        // ch.inofix.referencemanager.service.util.ReferenceImporter
-        String comments = null;
-        String preamble = null;
-        String strings = null;
-
-        if (bibliographyId <= 0) {
-            bibliography = _bibliographyService.addBibliography(title, description, urlTitle, comments, preamble,
-                    strings, serviceContext);
-        } else {
-            bibliography = _bibliographyService.updateBibliography(bibliographyId, title, description, urlTitle,
-                    comments, preamble, strings, serviceContext);
-        }
-
-        String redirect = getEditBibliographyURL(actionRequest, actionResponse, bibliography);
-        String tabs1 = ParamUtil.get(actionRequest, "tabs1", "settings");
-
-        actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
-        actionRequest.setAttribute(BibliographyWebKeys.BIBLIOGRAPHY, bibliography);
-        actionResponse.setRenderParameter("tabs1", tabs1);
-
-    }
     
     @Activate
     @Modified
@@ -273,6 +200,50 @@ public class BibliographyManagerPortlet extends MVCPortlet {
         _bibliographyManagerConfiguration = Configurable.createConfigurable(BibliographyManagerConfiguration.class,
                 properties);
     }
+    
+   /**
+    *
+    * @param actionRequest
+    * @param actionResponse
+    * @throws Exception
+    */
+   protected void deleteBibliographies(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+
+       long bibliographyId = ParamUtil.getLong(actionRequest, "bibliographyId");
+
+       long[] bibliographyIds = ParamUtil.getLongValues(actionRequest, "deleteBibliographyIds");
+
+       if (bibliographyId > 0) {
+           bibliographyIds = new long[] { bibliographyId };
+       }
+
+       for (long id : bibliographyIds) {
+           _bibliographyService.deleteBibliography(id);
+       }
+
+   }
+   
+   /**
+   *
+   * @param actionRequest
+   * @param actionResponse
+   * @throws Exception
+   */
+  protected void deleteReferences(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+
+      long referenceId = ParamUtil.getLong(actionRequest, "referenceId");
+
+      long[] referenceIds = ParamUtil.getLongValues(actionRequest, "deleteBibliographyIds");
+
+      if (referenceId > 0) {
+          referenceIds = new long[] { referenceId };
+      }
+
+      for (long id : referenceIds) {
+          _referenceService.deleteReference(id);
+      }
+
+  }
 
     /**
      * 
@@ -287,16 +258,6 @@ public class BibliographyManagerPortlet extends MVCPortlet {
         } else {
             super.doDispatch(renderRequest, renderResponse);
         }
-    }
-    
-    @Override
-    public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
-            throws IOException, PortletException {
-
-        renderRequest.setAttribute(BibliographyManagerConfiguration.class.getName(),
-                _bibliographyManagerConfiguration);
-
-        super.doView(renderRequest, renderResponse);
     }
 
     /**
@@ -409,6 +370,49 @@ public class BibliographyManagerPortlet extends MVCPortlet {
 
         portletRequest.setAttribute(BibliographyWebKeys.BIBLIOGRAPHY, bibliography);
     }
+    
+
+    /**
+     * 
+     * @param actionRequest
+     * @param actionResponse
+     * @since 1.0.0
+     * @throws Exception
+     */
+    protected void importBibliography(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+
+        HttpServletRequest request = PortalUtil.getHttpServletRequest(actionRequest);
+
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+
+        UploadPortletRequest uploadPortletRequest = PortalUtil.getUploadPortletRequest(actionRequest);
+
+        File file = uploadPortletRequest.getFile("file");
+        String fileName = file.getName();
+
+        long userId = themeDisplay.getUserId();
+        long groupId = themeDisplay.getScopeGroupId();
+        boolean privateLayout = themeDisplay.getLayout().isPrivateLayout();
+
+        Map<String, String[]> parameterMap = request.getParameterMap();
+
+        if (Validator.isNotNull(file)) {
+
+            String message = PortletUtil.translate("upload-successfull-import-will-finish-in-a-separate-thread");
+            ServiceContext serviceContext = ServiceContextFactory.getInstance(Reference.class.getName(),
+                    uploadPortletRequest);
+
+            _referenceService.importReferencesInBackground(userId, fileName, groupId, privateLayout, parameterMap, file,
+                    serviceContext);
+
+            SessionMessages.add(actionRequest, "request_processed", message);
+
+        } else {
+
+            SessionErrors.add(actionRequest, "file-not-found");
+
+        }
+    }
 
     @org.osgi.service.component.annotations.Reference
     protected void setBibliographyService(BibliographyService bibliographyService) {
@@ -424,14 +428,54 @@ public class BibliographyManagerPortlet extends MVCPortlet {
     protected void setReferenceService(ReferenceService referenceService) {
         this._referenceService = referenceService;
     }
+    
+    /**
+     * 
+     * @param actionRequest
+     * @param actionResponse
+     * @since 1.0.0
+     * @throws Exception
+     */
+    protected void updateBibliography(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+
+        long bibliographyId = ParamUtil.getLong(actionRequest, "bibliographyId");
+
+        String title = ParamUtil.getString(actionRequest, "title");
+        String description = ParamUtil.getString(actionRequest, "description");
+        String urlTitle = ParamUtil.getString(actionRequest, "urlTitle");
+
+        ServiceContext serviceContext = ServiceContextFactory.getInstance(Bibliography.class.getName(), actionRequest);
+
+        Bibliography bibliography = null;
+
+        // Only available in imported database, see
+        // ch.inofix.referencemanager.service.util.ReferenceImporter
+        String comments = null;
+        String preamble = null;
+        String strings = null;
+
+        if (bibliographyId <= 0) {
+            bibliography = _bibliographyService.addBibliography(title, description, urlTitle, comments, preamble,
+                    strings, serviceContext);
+        } else {
+            bibliography = _bibliographyService.updateBibliography(bibliographyId, title, description, urlTitle,
+                    comments, preamble, strings, serviceContext);
+        }
+
+        String redirect = getEditBibliographyURL(actionRequest, actionResponse, bibliography);
+        String tabs1 = ParamUtil.get(actionRequest, "tabs1", "settings");
+
+        actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
+        actionRequest.setAttribute(BibliographyWebKeys.BIBLIOGRAPHY, bibliography);
+        actionResponse.setRenderParameter("tabs1", tabs1);
+
+    }
 
     private BibliographyService _bibliographyService;
     private BibRefRelationService _bibRefRelationService;
     private ReferenceService _referenceService;
     
     private volatile BibliographyManagerConfiguration _bibliographyManagerConfiguration;
-
-    private static final String REQUEST_PROCESSED = "request_processed";
 
     private static Log _log = LogFactoryUtil.getLog(BibliographyManagerPortlet.class.getName());
 
