@@ -2,8 +2,8 @@
     bibliography_action.jsp: The action menu of the bibliography manager's default view.
     
     Created:    2017-01-25 11:42 by Christian Berndt
-    Modified:   2017-09-15 13:18 by Christian Berndt
-    Version:    1.0.1
+    Modified:   2017-10-12 18:54 by Christian Berndt
+    Version:    1.0.2
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -50,12 +50,12 @@
     <c:if test="<%=BibliographyPermission.contains(permissionChecker, bibliography,
                     BibliographyActionKeys.DELETE)%>">
 
-        <portlet:actionURL var="deleteURL"
-            name="deleteBibliography">
-            <portlet:param name="redirect"
-                value="<%=currentURL%>" />
+        <portlet:actionURL var="deleteURL">
+            <portlet:param name="<%= Constants.CMD %>"
+                value="deleteBibliographies"/>
             <portlet:param name="bibliographyId"
                 value="<%=String.valueOf(bibliography.getBibliographyId())%>" />
+            <portlet:param name="redirect" value="<%=currentURL%>" />
         </portlet:actionURL>
 
         <liferay-ui:icon-delete message="delete"

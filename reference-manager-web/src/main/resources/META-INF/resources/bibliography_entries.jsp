@@ -2,8 +2,8 @@
     bibliography_entries.jsp: browse the bibliography's references.
     
     Created:    2016-12-03 15:50 by Christian Berndt
-    Modified:   2017-09-19 12:24 by Christian Berndt
-    Version:    1.2.0
+    Modified:   2017-09-28 01:02 by Christian Berndt
+    Version:    1.2.1
 --%>
 
 <%@ include file="/init.jsp" %>
@@ -12,8 +12,8 @@
     String bibliographyId = ParamUtil.getString(request, "bibliographyId");
     String keywords = ParamUtil.getString(request, "keywords");
     String tabs1 = ParamUtil.getString(request, "tabs1", "browse");
-    
-    String [] columns = new String[] {"author", "title", "year"}; 
+
+    String[] columns = new String[] { "author", "title", "year" };
 
     if (Validator.isNotNull(bibliographyManagerConfiguration)) {
         columns = portletPreferences.getValues("columns", bibliographyManagerConfiguration.columns());
@@ -22,7 +22,7 @@
     Bibliography bibliography = (Bibliography) request.getAttribute(BibliographyWebKeys.BIBLIOGRAPHY);
     boolean hasUpdatePermission = BibliographyPermission.contains(permissionChecker, bibliography,
             BibliographyActionKeys.UPDATE);
-    
+
     request.setAttribute("bibliography_entries.jsp-bibliography", bibliography);
 
     SearchContainer<Reference> referenceSearch = new ReferenceSearch(renderRequest, "cur", portletURL);
@@ -38,8 +38,9 @@
 
     Sort sort = new Sort(referenceSearch.getOrderByCol(), reverse);
 
-    Hits hits = ReferenceServiceUtil.search(themeDisplay.getUserId(), 0, keywords,
-            bibliography.getBibliographyId(), referenceSearch.getStart(), referenceSearch.getEnd(), sort);
+    Hits hits = ReferenceServiceUtil.search(themeDisplay.getUserId(), scopeGroupId,
+            bibliography.getBibliographyId(), keywords, referenceSearch.getStart(), referenceSearch.getEnd(),
+            sort);
 
     List<Document> documents = ListUtil.toList(hits.getDocs());
 
@@ -63,13 +64,13 @@
 
     PortletURL addReferenceURL = referenceAssetRendererFactory.getURLAdd(liferayPortletRequest,
             liferayPortletResponse);
-    
-    String href = null; 
-    
+
+    String href = null;
+
     if (addReferenceURL != null) {
         addReferenceURL.setParameter("bibliographyId", String.valueOf(bibliographyId));
         addReferenceURL.setParameter("redirect", currentURL);
-        href = addReferenceURL.toString(); 
+        href = addReferenceURL.toString();
     }
 %>
 
