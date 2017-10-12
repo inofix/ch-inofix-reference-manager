@@ -14,6 +14,7 @@
 
 package ch.inofix.referencemanager.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -43,8 +44,8 @@ import ch.inofix.referencemanager.service.base.RefRefRelationLocalServiceBaseImp
  *
  * @author Christian Berndt
  * @created 2017-02-15 22:47
- * @modified 2017-02-15 22:47
- * @version 1.0.0
+ * @modified 2017-09-28 01:06
+ * @version 1.0.1
  * @see RefRefRelationLocalServiceBaseImpl
  * @see ch.inofix.referencemanager.service.RefRefRelationLocalServiceUtil
  */
@@ -116,7 +117,8 @@ public class RefRefRelationLocalServiceImpl extends RefRefRelationLocalServiceBa
 
     public void deleteByReferenceId(long referenceId) throws PortalException {
 
-        List<RefRefRelation> refRefRelations = refRefRelationPersistence.findByReferenceId1(referenceId);
+        List<RefRefRelation> refRefRelations = new ArrayList<RefRefRelation>(); 
+        refRefRelations.addAll(refRefRelationPersistence.findByReferenceId1(referenceId));
         refRefRelations.addAll(refRefRelationPersistence.findByReferenceId2(referenceId));
 
         for (RefRefRelation refRefRelation : refRefRelations) {
@@ -135,6 +137,17 @@ public class RefRefRelationLocalServiceImpl extends RefRefRelationLocalServiceBa
 
         referenceLocalService.reIndexReference(referenceId1);
         referenceLocalService.reIndexReference(referenceId2);
+
+    }
+    
+    public List<RefRefRelation> getRefRefRelations(long referenceId) throws PortalException {
+                
+        List<RefRefRelation> refRefRelations = new ArrayList<RefRefRelation>();
+                
+        refRefRelations.addAll(refRefRelationPersistence.findByReferenceId1(referenceId));
+        refRefRelations.addAll(refRefRelationPersistence.findByReferenceId2(referenceId));
+        
+        return refRefRelations;
 
     }
 
