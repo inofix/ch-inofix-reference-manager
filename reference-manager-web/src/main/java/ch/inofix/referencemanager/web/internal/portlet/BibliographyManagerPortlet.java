@@ -223,27 +223,27 @@ public class BibliographyManagerPortlet extends MVCPortlet {
 
    }
    
-   /**
-   *
-   * @param actionRequest
-   * @param actionResponse
-   * @throws Exception
-   */
-  protected void deleteReferences(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+    /**
+     *
+     * @param actionRequest
+     * @param actionResponse
+     * @throws Exception
+     */
+    protected void deleteReferences(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
 
-      long referenceId = ParamUtil.getLong(actionRequest, "referenceId");
+        long referenceId = ParamUtil.getLong(actionRequest, "referenceId");
 
-      long[] referenceIds = ParamUtil.getLongValues(actionRequest, "deleteBibliographyIds");
+        long[] referenceIds = ParamUtil.getLongValues(actionRequest, "deleteBibliographyIds");
 
-      if (referenceId > 0) {
-          referenceIds = new long[] { referenceId };
-      }
+        if (referenceId > 0) {
+            referenceIds = new long[] { referenceId };
+        }
 
-      for (long id : referenceIds) {
-          _referenceService.deleteReference(id);
-      }
+        for (long id : referenceIds) {
+            _referenceService.deleteReference(id);
+        }
 
-  }
+    }
 
     /**
      * 
