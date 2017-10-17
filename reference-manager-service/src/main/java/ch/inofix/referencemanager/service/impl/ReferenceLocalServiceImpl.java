@@ -41,7 +41,6 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
@@ -55,13 +54,14 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Sort;
-import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -149,12 +149,11 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
         referencePersistence.update(reference);
 
-        // Match user and group references against global references
+        // Match user and group references against common references
 
-        Company company = CompanyLocalServiceUtil.getCompany(companyId);
-        long globalGroupId = company.getGroupId();
+        long defaultGroupId = GetterUtil.getLong(PropsUtil.get("default.group.id"));
 
-        if (reference.getGroupId() != globalGroupId) {
+        if (reference.getGroupId() != defaultGroupId) {
             
             match(reference);
         }
@@ -204,6 +203,8 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
     @Override
     public Reference addReference(long userId, String bibTeX, ServiceContext serviceContext) throws PortalException {
+        
+        _log.info("addReference");
 
         return addReference(userId, bibTeX, new long[0], serviceContext);
 
@@ -421,18 +422,16 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
         _log.info("match");
 
-        long companyId = reference.getCompanyId();
-        Company company = CompanyLocalServiceUtil.getCompany(companyId);
-        long globalGroupId = company.getGroupId();
+        long defaultGroupId = GetterUtil.getLong(PropsUtil.get("default.group.id"));
 
-        Hits hits = search(reference.getUserId(), globalGroupId, -1, null, reference.getTitle(), null,
+        Hits hits = search(reference.getUserId(), defaultGroupId, -1, null, reference.getTitle(), null,
                 WorkflowConstants.STATUS_ANY, null, false, 0, 20, null);
 
         _log.info("hits.getLength() = " + hits.getLength());
 
         if (hits.getLength() == 0) {
 
-            // not yet in the global references
+            // not yet in the pool of common references
 
             _log.info("not yet in the global references ");
 
@@ -440,7 +439,7 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
             String bibTeX = reference.getBibTeX();
 
             ServiceContext serviceContext = new ServiceContext();
-            serviceContext.setScopeGroupId(globalGroupId);
+            serviceContext.setScopeGroupId(defaultGroupId);
 
             Reference globalReference = addReference(reference.getUserId(), bibTeX, serviceContext);
 
@@ -577,12 +576,11 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
         reference = referencePersistence.update(reference);
 
-        // Match user and group references against global references
+        // Match user and group references against common references
 
-        Company company = CompanyLocalServiceUtil.getCompany(companyId);
-        long globalGroupId = company.getGroupId();
+        long defaultGroupId = GetterUtil.getLong(PropsUtil.get("default.group.id"));
 
-        if (reference.getGroupId() != globalGroupId) {
+        if (reference.getGroupId() != defaultGroupId) {
             match(reference);
         }
 
