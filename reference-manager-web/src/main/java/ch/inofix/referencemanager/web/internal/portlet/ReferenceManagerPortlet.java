@@ -63,8 +63,8 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
  * 
  * @author Christian Berndt
  * @created 2016-04-10 22:32
- * @modified 2017-09-19 22:31
- * @version 1.1.5
+ * @modified 2017-10-17 18:28
+ * @version 1.1.6
  */
 @Component(configurationPid = "ch.inofix.referencemanager.web.configuration.ReferenceManagerConfiguration", 
     immediate = true, 
@@ -149,9 +149,9 @@ public class ReferenceManagerPortlet extends MVCPortlet {
         _log.info("cmd = " + cmd);
         
         try {
-            if (cmd.equals(Constants.DELETE)) {
+            if (cmd.equals("deleteReferences")) {
                 
-                deleteReference(actionRequest, actionResponse);
+                deleteReferences(actionRequest, actionResponse);
 
             } else if (cmd.equals("deleteGroupReferences")) {
                 
@@ -216,21 +216,26 @@ public class ReferenceManagerPortlet extends MVCPortlet {
     }
 
     /**
-     * 
-     * @param actionRequest
-     * @param actionResponse
-     * @since 1.0.0
-     * @throws Exception
-     */
-    protected void deleteReference(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
-        
-        _log.info("deleteReference()");
+    *
+    * @param actionRequest
+    * @param actionResponse
+    * @throws Exception
+    */
+   protected void deleteReferences(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
 
-        long referenceId = ParamUtil.getLong(actionRequest, "referenceId");
+       long referenceId = ParamUtil.getLong(actionRequest, "referenceId");
 
-        _referenceService.deleteReference(referenceId);
+       long[] referenceIds = ParamUtil.getLongValues(actionRequest, "deleteBibliographyIds");
 
-    }
+       if (referenceId > 0) {
+           referenceIds = new long[] { referenceId };
+       }
+
+       for (long id : referenceIds) {
+           _referenceService.deleteReference(id);
+       }
+
+   }
 
     /**
      * 
