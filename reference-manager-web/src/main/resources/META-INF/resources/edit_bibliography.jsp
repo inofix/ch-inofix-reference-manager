@@ -2,8 +2,8 @@
     edit_bibliography.jsp: default view of the bibliography manaager portlet.
     
     Created:    2016-11-30 00:18 by Christian Berndt
-    Modified:   2017-09-19 12:00 by Christian Berndt
-    Version:    1.0.8
+    Modified:   2017-10-28 21:51 by Christian Berndt
+    Version:    1.0.9
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -82,6 +82,7 @@
                 </portlet:resourceURL>
 
                 <aui:button cssClass="btn-sm pull-right"
+                    icon="icon-download"
                     href="<%=exportBibliographyURL%>"
                     value="download" />
 
