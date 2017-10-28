@@ -35,8 +35,8 @@ import ch.inofix.referencemanager.service.permission.BibliographyPermission;
  * 
  * @author Christian Berndt
  * @created 2016-12-01 12:56
- * @modified 2017-09-12 23:46
- * @version 1.0.6
+ * @modified 2017-10-29 00:49
+ * @version 1.0.7
  *
  */
 @Component(
@@ -89,9 +89,9 @@ public class BibliographyAssetRendererFactory extends BaseAssetRendererFactory<B
 
         ThemeDisplay themeDisplay = (ThemeDisplay) liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
-        User user = themeDisplay.getUser();
+//        User user = themeDisplay.getUser();
 
-        Group group = user.getGroup();
+        Group group = themeDisplay.getScopeGroup();
 
         if (group != null) {
 
