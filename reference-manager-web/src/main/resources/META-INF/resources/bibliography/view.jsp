@@ -1,9 +1,9 @@
 <%--
-    user_bibliographies.jsp: display a user's bibliographies.
+    bibliography/view.jsp: display the list of bibliographies.
     
     Created:    2016-12-16 00:12 by Christian Berndt
-    Modified:   2017-09-15 11:26 by Christian Berndt
-    Version:    1.0.7
+    Modified:   2017-10-29 00:29 by Christian Berndt
+    Version:    1.0.8
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -66,7 +66,8 @@
             <h2><liferay-ui:message key="your-bibliographies"/></h2>
         </c:when>
         <c:otherwise>
-            <h2><liferay-ui:message key="bibliographies-of-x" arguments="<%= new String[] {userName} %>"/></h2>
+            <h2><liferay-ui:message key="bibliographies"/></h2>
+<%--             <h2><liferay-ui:message key="bibliographies-of-x" arguments="<%= new String[] {userName} %>"/></h2> --%>
         </c:otherwise>
     </c:choose>
 </div>
