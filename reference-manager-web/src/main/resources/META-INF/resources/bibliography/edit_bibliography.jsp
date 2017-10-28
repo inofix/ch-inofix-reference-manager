@@ -1,5 +1,5 @@
 <%--
-    edit_bibliography.jsp: default view of the bibliography manaager portlet.
+    edit_bibliography.jsp: default view of the bibliography manager portlet.
     
     Created:    2016-11-30 00:18 by Christian Berndt
     Modified:   2017-10-28 21:51 by Christian Berndt

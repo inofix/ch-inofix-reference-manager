@@ -2,8 +2,8 @@
     bibliography_entries.jsp: browse the bibliography's references.
     
     Created:    2016-12-03 15:50 by Christian Berndt
-    Modified:   2017-09-28 01:02 by Christian Berndt
-    Version:    1.2.1
+    Modified:   2017-10-29 01:47 by Christian Berndt
+    Version:    1.2.2
 --%>
 
 <%@ include file="/init.jsp" %>
@@ -29,7 +29,7 @@
 
     PortletURL iteratorURL = referenceSearch.getIteratorURL();
     iteratorURL.setParameter("bibliographyId", bibliographyId);
-    iteratorURL.setParameter("mvcPath", "/edit_bibliography.jsp");
+    iteratorURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
 
     boolean reverse = false;
     if (referenceSearch.getOrderByType().equals("desc")) {
@@ -79,7 +79,7 @@
     <portlet:renderURL var="searchURL">
         <portlet:param name="bibliographyId"
             value="<%=String.valueOf(bibliographyId)%>" />
-        <portlet:param name="mvcPath" value="/edit_bibliography.jsp" />
+        <portlet:param name="mvcPath" value="/bibliography/edit_bibliography.jsp" />
         <portlet:param name="tabs1" value="browse" />
     </portlet:renderURL>
 

@@ -2,8 +2,8 @@
     import_bibliography.jsp: The import panel of bibliography manager.
     
     Created:    2016-12-01 02:50 by Christian Berndt
-    Modified:   2017-10-12 19:24 by Christian Berndt
-    Version:    1.0.6
+    Modified:   2017-10-29 01:48 by Christian Berndt
+    Version:    1.0.7
 --%>
 
 <%@ include file="/init.jsp" %>
@@ -30,7 +30,7 @@
     <aui:input name="bibliographyId" type="hidden"
         value="<%=bibliographyId%>" />
     <aui:input name="mvcPath" type="hidden"
-        value="/edit_bibliography.jsp" />
+        value="/bibliography/edit_bibliography.jsp" />
     <aui:input name="tabs1" type="hidden" value="<%=tabs1%>" />
 
 

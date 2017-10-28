@@ -30,8 +30,8 @@ import ch.inofix.referencemanager.web.internal.constants.BibliographyWebKeys;
  * 
  * @author Christian Berndt
  * @created 2016-12-01 12:50
- * @modified 2016-12-26 01:06
- * @version 1.0.5
+ * @modified 2017-10-29 01:45
+ * @version 1.0.6
  *
  */
 public class BibliographyAssetRenderer extends BaseJSPAssetRenderer<Bibliography> {
@@ -119,7 +119,7 @@ public class BibliographyAssetRenderer extends BaseJSPAssetRenderer<Bibliography
             PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(portletPlid,
                     PortletKeys.BIBLIOGRAPHY_MANAGER, PortletRequest.RENDER_PHASE);
 
-            portletURL.setParameter("mvcPath", "/edit_bibliography.jsp");
+            portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
 
             portletURL.setParameter("bibliographyId", String.valueOf(_bibliography.getBibliographyId()));
 
@@ -186,7 +186,7 @@ public class BibliographyAssetRenderer extends BaseJSPAssetRenderer<Bibliography
         PortletURL portletURL = PortletURLFactoryUtil.create(liferayPortletRequest, PortletKeys.BIBLIOGRAPHY_MANAGER,
                 portletPlid, PortletRequest.RENDER_PHASE);
 
-        portletURL.setParameter("mvcPath", "/edit_bibliography.jsp");
+        portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
 
         portletURL.setParameter("bibliographyId", String.valueOf(_bibliography.getBibliographyId()));
 

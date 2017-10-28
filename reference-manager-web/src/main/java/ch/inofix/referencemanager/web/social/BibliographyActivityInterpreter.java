@@ -27,8 +27,8 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Christian Berndt
  * @created 2016-12-04 13:21
- * @modified 2016-12-04 13:21
- * @version 1.0.0
+ * @modified 2017-10-29 01:47
+ * @version 1.0.1
  */
 @Component(
     property = {"javax.portlet.name=" + PortletKeys.BIBLIOGRAPHY_MANAGER }, 
@@ -49,7 +49,7 @@ public class BibliographyActivityInterpreter extends BaseSocialActivityInterpret
         PortletURL portletURL = PortletURLFactoryUtil.create(serviceContext.getRequest(), PortletKeys.BIBLIOGRAPHY_MANAGER,
                 plid, PortletRequest.RENDER_PHASE);
 
-        portletURL.setParameter("mvcPath", "/edit_bibliography.jsp");
+        portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
         portletURL.setParameter("backURL", serviceContext.getCurrentURL());
         portletURL.setParameter("bibliographyId", String.valueOf(activity.getClassPK()));
 
