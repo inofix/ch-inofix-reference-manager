@@ -63,8 +63,8 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
  * 
  * @author Christian Berndt
  * @created 2016-11-29 22:33
- * @modified 2017-10-12 18:41
- * @version 1.2.9
+ * @modified 2017-10-29 00:32
+ * @version 1.3.0
  */
 @Component(
     configurationPid = "ch.inofix.referencemanager.web.configuration.BibliographyManagerConfiguration",
@@ -76,7 +76,7 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
         "com.liferay.portlet.header-portlet-css=/css/main.css",
         "com.liferay.portlet.instanceable=false", 
         "javax.portlet.init-param.template-path=/",
-        "javax.portlet.init-param.view-template=/user_bibliographies.jsp",
+        "javax.portlet.init-param.view-template=/bibliography/view.jsp",
         "javax.portlet.name=" + PortletKeys.BIBLIOGRAPHY_MANAGER, 
         "javax.portlet.resource-bundle=content.Language",
         "javax.portlet.security-role-ref=power-user,user" 
