@@ -13,7 +13,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
@@ -32,8 +31,8 @@ import ch.inofix.referencemanager.service.permission.ReferencePermission;
  * 
  * @author Christian Berndt
  * @created 2016-11-18 21:49
- * @modified 2017-09-11 18:14
- * @version 1.0.3
+ * @modified 2017-10-29 01:03
+ * @version 1.0.4
  *
  */
 @Component(
@@ -82,9 +81,10 @@ public class ReferenceAssetRendererFactory extends BaseAssetRendererFactory<Refe
 
         ThemeDisplay themeDisplay = (ThemeDisplay) liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
-        User user = themeDisplay.getUser();
+//        User user = themeDisplay.getUser();
 
-        Group group = user.getGroup();
+        Group group = themeDisplay.getScopeGroup();
+//        Group group = user.getGroup();
 
         if (group != null) {
 
