@@ -2,8 +2,8 @@
     bibliography/view.jsp: display the list of bibliographies.
     
     Created:    2016-12-16 00:12 by Christian Berndt
-    Modified:   2017-10-29 00:29 by Christian Berndt
-    Version:    1.0.8
+    Modified:   2017-10-29 01:48 by Christian Berndt
+    Version:    1.0.9
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -84,7 +84,7 @@
         escapedModel="true" modelVar="bibliography">
         
         <portlet:renderURL var="viewURL">
-            <portlet:param name="mvcPath" value="/edit_bibliography.jsp" />
+            <portlet:param name="mvcPath" value="/bibliography/edit_bibliography.jsp" />
             <portlet:param name="redirect" value="<%=currentURL%>" />
             <portlet:param name="bibliographyId"
                 value="<%=String.valueOf(bibliography.getBibliographyId())%>" />

@@ -63,8 +63,8 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
  * 
  * @author Christian Berndt
  * @created 2016-11-29 22:33
- * @modified 2017-10-29 00:32
- * @version 1.3.0
+ * @modified 2017-10-29 01:46
+ * @version 1.3.1
  */
 @Component(
     configurationPid = "ch.inofix.referencemanager.web.configuration.BibliographyManagerConfiguration",
@@ -100,7 +100,7 @@ public class BibliographyManagerPortlet extends MVCPortlet {
         _bibRefRelationService.deleteBibRefRelation(bibliographyId, referenceId);
 
         actionResponse.setRenderParameter("bibliographyId", String.valueOf(bibliographyId));
-        actionResponse.setRenderParameter("mvcPath", "/edit_bibliography.jsp");
+        actionResponse.setRenderParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
 
     }    
     
@@ -341,7 +341,7 @@ public class BibliographyManagerPortlet extends MVCPortlet {
         editBibliographyURL = HttpUtil.setParameter(editBibliographyURL, "p_p_id", PortletKeys.BIBLIOGRAPHY_MANAGER);
         editBibliographyURL = HttpUtil.setParameter(editBibliographyURL, "p_p_state", windowState);
         editBibliographyURL = HttpUtil.setParameter(editBibliographyURL, namespace + "mvcPath",
-                templatePath + "edit_bibliography.jsp");
+                templatePath + "bibliography/edit_bibliography.jsp");
         editBibliographyURL = HttpUtil.setParameter(editBibliographyURL, namespace + "redirect",
                 getRedirect(actionRequest, actionResponse));
         editBibliographyURL = HttpUtil.setParameter(editBibliographyURL, namespace + "backURL",
