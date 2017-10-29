@@ -2,8 +2,8 @@
     bibliography_entries.jsp: browse the bibliography's references.
     
     Created:    2016-12-03 15:50 by Christian Berndt
-    Modified:   2017-10-29 01:47 by Christian Berndt
-    Version:    1.2.2
+    Modified:   2017-10-29 13:58 by Christian Berndt
+    Version:    1.2.3
 --%>
 
 <%@ include file="/init.jsp" %>
@@ -24,6 +24,7 @@
             BibliographyActionKeys.UPDATE);
 
     request.setAttribute("bibliography_entries.jsp-bibliography", bibliography);
+    request.setAttribute("bibliography_entries.jsp-isBibliographyManager", "true");
 
     SearchContainer<Reference> referenceSearch = new ReferenceSearch(renderRequest, "cur", portletURL);
 
