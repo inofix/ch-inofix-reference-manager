@@ -63,8 +63,8 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
  * 
  * @author Christian Berndt
  * @created 2016-11-29 22:33
- * @modified 2017-10-29 01:46
- * @version 1.3.1
+ * @modified 2017-10-29 19:08
+ * @version 1.3.2
  */
 @Component(
     configurationPid = "ch.inofix.referencemanager.web.configuration.BibliographyManagerConfiguration",
@@ -220,6 +220,8 @@ public class BibliographyManagerPortlet extends MVCPortlet {
        for (long id : bibliographyIds) {
            _bibliographyService.deleteBibliography(id);
        }
+       
+       addSuccessMessage(actionRequest, actionResponse);
 
    }
    
@@ -242,6 +244,8 @@ public class BibliographyManagerPortlet extends MVCPortlet {
         for (long id : referenceIds) {
             _referenceService.deleteReference(id);
         }
+        
+        addSuccessMessage(actionRequest, actionResponse);
 
     }
 
@@ -468,6 +472,8 @@ public class BibliographyManagerPortlet extends MVCPortlet {
         actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
         actionRequest.setAttribute(BibliographyWebKeys.BIBLIOGRAPHY, bibliography);
         actionResponse.setRenderParameter("tabs1", tabs1);
+        
+        addSuccessMessage(actionRequest, actionResponse);
 
     }
 
