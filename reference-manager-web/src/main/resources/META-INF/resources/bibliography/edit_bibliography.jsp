@@ -2,13 +2,11 @@
     edit_bibliography.jsp: default view of the bibliography manager portlet.
     
     Created:    2016-11-30 00:18 by Christian Berndt
-    Modified:   2017-10-28 21:51 by Christian Berndt
-    Version:    1.0.9
+    Modified:   2017-10-29 01:54 by Christian Berndt
+    Version:    1.1.0
 --%>
 
 <%@ include file="/init.jsp"%>
-
-<%@page import="com.liferay.portal.kernel.service.GroupLocalServiceUtil"%>
 
 <%
     String redirect = ParamUtil.getString(request, "redirect");
@@ -21,7 +19,7 @@
     
     String userLink = null;
 
-    portletURL.setParameter("mvcPath", "/edit_bibliography.jsp");
+    portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
 
     boolean hasUpdatePermission = true;
 
