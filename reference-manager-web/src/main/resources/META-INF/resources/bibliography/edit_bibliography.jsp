@@ -96,14 +96,14 @@
 <c:choose>
 
     <c:when test='<%= tabs1.equals("import") %>'>
-        <liferay-util:include page="/import_bibliography.jsp" servletContext="<%= application %>" />
+        <liferay-util:include page="/bibliography/import_bibliography.jsp" servletContext="<%= application %>" />
     </c:when>
     
    <c:when test='<%= tabs1.equals("settings") %>'>
-       <liferay-util:include page="/bibliography_settings.jsp" servletContext="<%= application %>" />
+       <liferay-util:include page="/bibliography/bibliography_settings.jsp" servletContext="<%= application %>" />
    </c:when>        
 
     <c:otherwise> 
-       <liferay-util:include page="/bibliography_entries.jsp" servletContext="<%= application %>" />     
+       <liferay-util:include page="/bibliography/bibliography_entries.jsp" servletContext="<%= application %>" />     
     </c:otherwise>
 </c:choose>
