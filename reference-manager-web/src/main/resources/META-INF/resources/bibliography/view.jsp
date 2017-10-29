@@ -2,65 +2,73 @@
     bibliography/view.jsp: display the list of bibliographies.
     
     Created:    2016-12-16 00:12 by Christian Berndt
-    Modified:   2017-10-29 01:48 by Christian Berndt
-    Version:    1.0.9
+    Modified:   2017-10-29 16:31 by Christian Berndt
+    Version:    1.1.0
 --%>
 
 <%@ include file="/init.jsp"%>
 
 <%
-   boolean hasAddPermission = false;
+    boolean hasAddPermission = false;
 
-   long userGroupId = 0; 
-   Group userGroup = user.getGroup(); 
-   String userName = themeDisplay.getScopeGroupName();
+    long userGroupId = 0;
+    Group userGroup = user.getGroup();
+    String userName = themeDisplay.getScopeGroupName();
 
-   if (userGroup != null) {
-       userGroupId = userGroup.getGroupId(); 
-       hasAddPermission = BibliographyManagerPortletPermission.contains(permissionChecker, userGroupId,
-               BibliographyActionKeys.ADD_BIBLIOGRAPHY); 
-   } 
-   boolean isUserGroup = themeDisplay.getScopeGroupId() == userGroupId;
+    if (userGroup != null) {
+        userGroupId = userGroup.getGroupId();
+        hasAddPermission = BibliographyManagerPortletPermission.contains(permissionChecker, userGroupId,
+                BibliographyActionKeys.ADD_BIBLIOGRAPHY);
+    }
+    boolean isUserGroup = themeDisplay.getScopeGroupId() == userGroupId;
 
-   String keywords = null; 
+    String keywords = null;
 
-   SearchContainer<Bibliography> bibliographySearch = new BibliographySearch(renderRequest, "cur", portletURL);
+    SearchContainer<Bibliography> bibliographySearch = new BibliographySearch(renderRequest, "cur", portletURL);
 
-   boolean reverse = false; 
-   if (bibliographySearch.getOrderByType().equals("desc")) {
-       reverse = true;
-   }
-   
-   String tabNames = "settings"; 
-   String tabs1 = ParamUtil.getString(request, "tabs1", "settings");
-   
-   Sort sort = new Sort(bibliographySearch.getOrderByCol(), reverse);
-   
-   BibliographySearchTerms searchTerms = (BibliographySearchTerms) bibliographySearch.getSearchTerms();
+    boolean reverse = false;
+    if (bibliographySearch.getOrderByType().equals("desc")) {
+        reverse = true;
+    }
 
-   Hits hits = BibliographyServiceUtil.search(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), -1, keywords,
-           bibliographySearch.getStart(), bibliographySearch.getEnd(), sort);
+    String tabNames = "settings";
+    String tabs1 = ParamUtil.getString(request, "tabs1", "settings");
 
-   List<Document> documents = ListUtil.toList(hits.getDocs());
+    Sort sort = new Sort(bibliographySearch.getOrderByCol(), reverse);
 
-   List<Bibliography> bibliographies = new ArrayList<Bibliography>();
+    BibliographySearchTerms searchTerms = (BibliographySearchTerms) bibliographySearch.getSearchTerms();
 
-   for (Document document : documents) {
-       try {
-           long bibliographyId = GetterUtil.getLong(document.get("entryClassPK"));
-           Bibliography bibliography = BibliographyServiceUtil.getBibliography(bibliographyId);
-           bibliographies.add(bibliography);
-       } catch (Exception e) {
-           // TODO: use logging
-           System.out.println(e);
-       }
-   }
+    Hits hits = null;
 
-   bibliographySearch.setResults(bibliographies);
-   bibliographySearch.setTotal(hits.getLength());
-   
-   AssetRendererFactory<Bibliography> assetRendererFactory = AssetRendererFactoryRegistryUtil
-           .getAssetRendererFactoryByClass(Bibliography.class);  
+    if (isUserGroup) {
+        hits = BibliographyServiceUtil.search(themeDisplay.getUserId(), 0, themeDisplay.getUserId(), keywords,
+                bibliographySearch.getStart(), bibliographySearch.getEnd(), sort);
+    } else {
+
+        hits = BibliographyServiceUtil.search(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), -1,
+                keywords, bibliographySearch.getStart(), bibliographySearch.getEnd(), sort);
+    }
+
+    List<Document> documents = ListUtil.toList(hits.getDocs());
+
+    List<Bibliography> bibliographies = new ArrayList<Bibliography>();
+
+    for (Document document : documents) {
+        try {
+            long bibliographyId = GetterUtil.getLong(document.get("entryClassPK"));
+            Bibliography bibliography = BibliographyServiceUtil.getBibliography(bibliographyId);
+            bibliographies.add(bibliography);
+        } catch (Exception e) {
+            // TODO: use logging
+            System.out.println(e);
+        }
+    }
+
+    bibliographySearch.setResults(bibliographies);
+    bibliographySearch.setTotal(hits.getLength());
+
+    AssetRendererFactory<Bibliography> assetRendererFactory = AssetRendererFactoryRegistryUtil
+            .getAssetRendererFactoryByClass(Bibliography.class);
 %>
 
 <div class="bibliography-head">
