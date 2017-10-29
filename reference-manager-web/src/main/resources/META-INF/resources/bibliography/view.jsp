@@ -31,6 +31,9 @@
        reverse = true;
    }
    
+   String tabNames = "settings"; 
+   String tabs1 = ParamUtil.getString(request, "tabs1", "settings");
+   
    Sort sort = new Sort(bibliographySearch.getOrderByCol(), reverse);
    
    BibliographySearchTerms searchTerms = (BibliographySearchTerms) bibliographySearch.getSearchTerms();
@@ -89,6 +92,30 @@
             <portlet:param name="bibliographyId"
                 value="<%=String.valueOf(bibliography.getBibliographyId())%>" />
         </portlet:renderURL>
+        
+        <% 
+        
+            Group group = null;  
+    
+            String userLink = null;
+        
+            portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
+        
+            boolean hasUpdatePermission = true;
+        
+            if (bibliography != null) {
+                
+                group = GroupLocalServiceUtil.getGroup(bibliography.getGroupId());  
+                userLink = "<a href=\"" + group.getDisplayURL(themeDisplay) + "\">" + bibliography.getUserName() + "</a>";
+                
+                hasUpdatePermission = BibliographyPermission.contains(permissionChecker, bibliography, BibliographyActionKeys.UPDATE);
+                tabNames = "browse,import,settings";
+                portletURL.setParameter("bibliographyId", String.valueOf(bibliography.getBibliographyId()));
+                tabs1 = ParamUtil.getString(request, "tabs1", "browse");
+                AssetEntryServiceUtil.incrementViewCounter(Bibliography.class.getName(), bibliography.getBibliographyId());
+            }
+            
+        %>
 
         <liferay-ui:search-container-column-text orderable="true"
             orderableProperty="title_sortable" valign="middle">
@@ -98,6 +125,11 @@
                 
             <div class="description"><%=bibliography.getDescription()%></div>
             
+            <div class="compiled-by">
+                <liferay-ui:message key="compiled-by-x"
+                        arguments="<%=new String[] { userLink }%>" />
+            </div>
+
             <liferay-ui:asset-tags-summary
                 className="<%=Bibliography.class.getName()%>"
                 classPK="<%=bibliography.getBibliographyId()%>" />
@@ -110,7 +142,7 @@
         </liferay-ui:search-container-column-text>
 
         <liferay-ui:search-container-column-jsp align="right" cssClass="entry-action"
-              path="/bibliography/bibliography_action.jsp" valign="top" />
+              path="/bibliography/bibliography_action.jsp" valign="top"/>
 
     </liferay-ui:search-container-row>
 
