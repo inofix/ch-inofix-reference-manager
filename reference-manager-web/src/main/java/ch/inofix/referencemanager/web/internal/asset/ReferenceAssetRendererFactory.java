@@ -13,6 +13,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
@@ -81,10 +82,10 @@ public class ReferenceAssetRendererFactory extends BaseAssetRendererFactory<Refe
 
         ThemeDisplay themeDisplay = (ThemeDisplay) liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
-//        User user = themeDisplay.getUser();
+        User user = themeDisplay.getUser();
 
-        Group group = themeDisplay.getScopeGroup();
-//        Group group = user.getGroup();
+//        Group group = themeDisplay.getScopeGroup();
+        Group group = user.getGroup();
 
         if (group != null) {
 
