@@ -2,8 +2,8 @@
     reference_action.jsp: The action menu of the reference manager's default view.
     
     Created:    2016-11-29 18:51 by Christian Berndt
-    Modified:   2017-10-12 18:55 by Christian Berndt
-    Version:    1.0.6
+    Modified:   2017-10-29 13:26 by Christian Berndt
+    Version:    1.0.7
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -12,6 +12,8 @@
     ResultRow row = (ResultRow) request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
     Bibliography bibliography = (Bibliography) request.getAttribute("bibliography_entries.jsp-bibliography");
+
+    boolean isBibliographyManager = GetterUtil.getBoolean(request.getAttribute("bibliography_entries.jsp-isBibliographyManager"), false); 
 
     Reference reference = null;
 
@@ -38,7 +40,7 @@
 <liferay-ui:icon-menu icon="<%=StringPool.BLANK%>"
     message="<%=StringPool.BLANK%>" showExpanded="<%=row == null%>"
     showWhenSingleIcon="true">
-
+    
     <c:if test="<%=ReferencePermission.contains(permissionChecker, reference, ReferenceActionKeys.VIEW)%>">
 
         <liferay-ui:icon iconCssClass="icon-eye-open" message="view"
@@ -70,7 +72,8 @@
 
     </c:if>
 
-    <c:if test="<%=ReferencePermission.contains(permissionChecker, reference, ReferenceActionKeys.DELETE)%>">
+    <c:if test="<%=ReferencePermission.contains(permissionChecker, reference, ReferenceActionKeys.DELETE)
+                    && isBibliographyManager %>">
 
         <portlet:actionURL var="deleteBibRefRelationURL"
             name="deleteBibRefRelation">
