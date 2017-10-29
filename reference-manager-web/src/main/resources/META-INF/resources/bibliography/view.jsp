@@ -2,8 +2,8 @@
     bibliography/view.jsp: display the list of bibliographies.
     
     Created:    2016-12-16 00:12 by Christian Berndt
-    Modified:   2017-10-29 16:31 by Christian Berndt
-    Version:    1.1.0
+    Modified:   2017-10-29 17:48 by Christian Berndt
+    Version:    1.1.1
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -101,35 +101,43 @@
                 value="<%=String.valueOf(bibliography.getBibliographyId())%>" />
         </portlet:renderURL>
         
-        <% 
-        
-            Group group = null;  
-    
-            String userLink = null;
-        
-            portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
-        
-            boolean hasUpdatePermission = true;
-        
-            if (bibliography != null) {
-                
-                group = GroupLocalServiceUtil.getGroup(bibliography.getGroupId());  
-                userLink = "<a href=\"" + group.getDisplayURL(themeDisplay) + "\">" + bibliography.getUserName() + "</a>";
-                
-                hasUpdatePermission = BibliographyPermission.contains(permissionChecker, bibliography, BibliographyActionKeys.UPDATE);
-                tabNames = "browse,import,settings";
-                portletURL.setParameter("bibliographyId", String.valueOf(bibliography.getBibliographyId()));
-                tabs1 = ParamUtil.getString(request, "tabs1", "browse");
-                AssetEntryServiceUtil.incrementViewCounter(Bibliography.class.getName(), bibliography.getBibliographyId());
-            }
-            
-        %>
+        <%
+                    Group group = null;  
+                    
+                    String userLink = null;
+                        
+                    portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
+                        
+                    boolean hasUpdatePermission = true;
+                    
+                    int numReferences = 0; 
+                        
+                    if (bibliography != null) {
+
+                        group = GroupLocalServiceUtil.getGroup(bibliography.getGroupId());
+                        userLink = "<a href=\"" + group.getDisplayURL(themeDisplay) + "\">" + bibliography.getUserName()
+                                + "</a>";
+
+                        hasUpdatePermission = BibliographyPermission.contains(permissionChecker, bibliography,
+                                BibliographyActionKeys.UPDATE);
+                        tabNames = "browse,import,settings";
+                        portletURL.setParameter("bibliographyId", String.valueOf(bibliography.getBibliographyId()));
+                        tabs1 = ParamUtil.getString(request, "tabs1", "browse");
+                        AssetEntryServiceUtil.incrementViewCounter(Bibliography.class.getName(),
+                                bibliography.getBibliographyId());
+
+                        Hits referenceHits = ReferenceServiceUtil.search(themeDisplay.getUserId(), scopeGroupId,
+                                bibliography.getBibliographyId(), keywords, 0, 0, sort);
+                        
+                        numReferences = referenceHits.getLength();
+                    }
+                %>
 
         <liferay-ui:search-container-column-text orderable="true"
             orderableProperty="title_sortable" valign="middle">
 
             <aui:a cssClass="bibliography-title" href="<%=viewURL%>"
-                label="<%=bibliography.getTitle()%>" />
+                label="<%=bibliography.getTitle() + " (" + numReferences + ")" %>" />
                 
             <div class="description"><%=bibliography.getDescription()%></div>
             
