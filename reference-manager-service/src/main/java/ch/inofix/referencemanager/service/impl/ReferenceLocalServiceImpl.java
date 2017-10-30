@@ -93,8 +93,8 @@ import ch.inofix.referencemanager.social.ReferenceActivityKeys;
  * @author Brian Wing Shun Chan
  * @author Christian Berndt
  * @created 2016-03-28 17:08
- * @modified 2017-10-29 17:27
- * @version 1.1.2
+ * @modified 2017-10-30 15:08
+ * @version 1.1.3
  * @see ReferenceLocalServiceBaseImpl
  * @see ch.inofix.referencemanager.service.ReferenceLocalServiceUtil
  */
@@ -147,14 +147,15 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
         referencePersistence.update(reference);
 
-//        // Match user and group references against common references
-//
-//        long defaultGroupId = GetterUtil.getLong(PropsUtil.get("default.group.id"));
-//
-//        if (reference.getGroupId() != defaultGroupId) {
-//            
-//            match(reference);
-//        }
+        // Match user and group references against common references
+
+        long defaultGroupId = GetterUtil.getLong(PropsUtil.get("default.group.id"));
+        
+        if (reference.getGroupId() != defaultGroupId) {
+            
+            match(reference);
+            
+        }
 
         // BibRefRelation
 
