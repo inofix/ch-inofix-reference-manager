@@ -2,8 +2,8 @@
     bibliography/view.jsp: display the list of bibliographies.
     
     Created:    2016-12-16 00:12 by Christian Berndt
-    Modified:   2017-10-29 17:48 by Christian Berndt
-    Version:    1.1.1
+    Modified:   2017-10-29 19:32 by Christian Berndt
+    Version:    1.1.3
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -41,11 +41,12 @@
     Hits hits = null;
 
     if (isUserGroup) {
-        hits = BibliographyServiceUtil.search(themeDisplay.getUserId(), 0, themeDisplay.getUserId(), keywords,
+        
+        hits = BibliographyServiceUtil.search(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), -1, keywords,
                 bibliographySearch.getStart(), bibliographySearch.getEnd(), sort);
     } else {
 
-        hits = BibliographyServiceUtil.search(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), -1,
+        hits = BibliographyServiceUtil.search(themeDisplay.getUserId(), 0, -1,
                 keywords, bibliographySearch.getStart(), bibliographySearch.getEnd(), sort);
     }
 
@@ -126,7 +127,7 @@
                         AssetEntryServiceUtil.incrementViewCounter(Bibliography.class.getName(),
                                 bibliography.getBibliographyId());
 
-                        Hits referenceHits = ReferenceServiceUtil.search(themeDisplay.getUserId(), scopeGroupId,
+                        Hits referenceHits = ReferenceServiceUtil.search(themeDisplay.getUserId(), bibliography.getGroupId(),
                                 bibliography.getBibliographyId(), keywords, 0, 0, sort);
                         
                         numReferences = referenceHits.getLength();
@@ -181,6 +182,8 @@
     }
 %>
 
-<aui:button href="<%=editBibliographyURL%>"
-    cssClass="btn-primary btn-success" value="new-bibliography"
-    disabled="<%=!hasAddPermission%>" />
+<c:if test="<%= userGroupId == scopeGroupId %>">
+    <aui:button href="<%=editBibliographyURL%>"
+        cssClass="btn-primary btn-success" value="new-bibliography"
+        disabled="<%=!hasAddPermission%>" />
+</c:if>
