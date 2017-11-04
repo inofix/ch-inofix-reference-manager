@@ -1,15 +1,16 @@
 <%--
-    view.jsp: Default view of the reference manager portlet.
+    reference/view.jsp: Default view of the reference manager portlet.
     
     Created:    2016-01-10 22:51 by Christian Berndt
-    Modified:   2017-09-27 23:10 by Christian Berndt
-    Version:    1.2.0
+    Modified:   2017-11-04 19:38 by Christian Berndt
+    Version:    1.2.1
 --%>
 
 <%@ include file="/init.jsp" %>
 
 <%
     String backURL = ParamUtil.getString(request, "backURL");
+    String displayStyle = ParamUtil.getString(request, "displayStyle");
     String keywords = ParamUtil.getString(request, "keywords");
     String tabs1 = ParamUtil.getString(request, "tabs1", "browse");
     
@@ -19,19 +20,20 @@
         columns = portletPreferences.getValues("columns", referenceManagerConfiguration.columns());
     }
 
-    SearchContainer<Reference> referenceSearch = new ReferenceSearch(renderRequest, "cur", portletURL);
+    SearchContainer<Reference> searchContainer = new ReferenceSearch(renderRequest, "cur", portletURL);
     
     boolean reverse = false; 
-    if (referenceSearch.getOrderByType().equals("desc")) {
+    
+    if (searchContainer.getOrderByType().equals("desc")) {
         reverse = true;
     }
     
-    Sort sort = new Sort(referenceSearch.getOrderByCol(), reverse);
+    Sort sort = new Sort(searchContainer.getOrderByCol(), reverse);
     
-    ReferenceSearchTerms searchTerms = (ReferenceSearchTerms) referenceSearch.getSearchTerms();
+    ReferenceSearchTerms searchTerms = (ReferenceSearchTerms) searchContainer.getSearchTerms();
 
     Hits hits = ReferenceServiceUtil.search(themeDisplay.getUserId(), scopeGroupId, -1, keywords,
-            referenceSearch.getStart(), referenceSearch.getEnd(), sort);
+            searchContainer.getStart(), searchContainer.getEnd(), sort);
     
     List<Document> documents = ListUtil.toList(hits.getDocs());
     
@@ -47,11 +49,23 @@
         }
     }
 
-    referenceSearch.setResults(references); 
-    referenceSearch.setTotal(hits.getLength());
+    searchContainer.setResults(references); 
+    searchContainer.setTotal(hits.getLength());
+    
+    ReferenceEntriesChecker entriesChecker = new ReferenceEntriesChecker(liferayPortletRequest, liferayPortletResponse);
+
+    searchContainer.setRowChecker(entriesChecker);
     
     AssetRendererFactory<Reference> referenceAssetRendererFactory = AssetRendererFactoryRegistryUtil
-            .getAssetRendererFactoryByClass(Reference.class);    
+            .getAssetRendererFactoryByClass(Reference.class);
+    
+    request.setAttribute("view.jsp-columns", columns);
+
+    request.setAttribute("view.jsp-displayStyle", displayStyle);
+
+    request.setAttribute("view.jsp-searchContainer", searchContainer);
+
+    request.setAttribute("view.jsp-total", hits.getLength());
 %>
 
 <liferay-ui:error exception="<%= PrincipalException.class %>"
@@ -74,19 +88,23 @@
 
         <%-- 
         <div class="search-results">
-            <liferay-ui:search-speed hits="<%= hits %>" searchContainer="<%= referenceSearch %>" />
+            <liferay-ui:search-speed hits="<%= hits %>" searchContainer="<%= searchContainer %>" />
         </div>
         --%>
+        
+        <liferay-util:include page="/reference/toolbar.jsp" servletContext="<%= application %>">
+            <liferay-util:param name="searchContainerId" value="references" />
+        </liferay-util:include>
 
         <liferay-ui:search-container
             cssClass="references-search-container"            
             id="references"
-            searchContainer="<%= referenceSearch %>"
+            searchContainer="<%= searchContainer %>"
             var="referenceSearchContainer">
             
 			<liferay-ui:search-container-row
 				className="ch.inofix.referencemanager.model.Reference"
-				escapedModel="true" modelVar="reference">
+				escapedModel="true" keyProperty="referenceId" modelVar="reference">
                 
                 <%@ include file="/reference/search_columns.jspf" %>
  

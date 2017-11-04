@@ -1,14 +1,15 @@
 <%--
-    init.jsp: Common setup code for the reference manager portlet.
+    init.jsp: Common setup code for the reference manager portlets.
     
     Created:    2016-01-10 22:51 by Christian Berndt
-    Modified:   2017-11-04 18:03 by Christian Berndt
-    Version:    1.2.8
+    Modified:   2017-11-04 19:21 by Christian Berndt
+    Version:    1.2.9
 --%>
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
 <%@taglib uri="http://liferay.com/tld/aui" prefix="aui"%>
+<%@taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend"%>
 <%@taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %>
 <%@taglib uri="http://liferay.com/tld/security" prefix="liferay-security"%>
 <%@taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme"%>
@@ -16,6 +17,7 @@
 <%@taglib uri="http://liferay.com/tld/util" prefix="liferay-util"%>
 
 <%@page import="ch.inofix.referencemanager.constants.BibliographyActionKeys"%>
+<%@page import="ch.inofix.referencemanager.constants.PortletKeys"%>
 <%@page import="ch.inofix.referencemanager.constants.ReferenceActionKeys"%>
 <%@page import="ch.inofix.referencemanager.model.Bibliography"%>
 <%@page import="ch.inofix.referencemanager.model.Reference"%>
@@ -34,6 +36,7 @@
 <%@page import="ch.inofix.referencemanager.web.internal.constants.ReferenceWebKeys"%>
 <%@page import="ch.inofix.referencemanager.web.internal.search.BibliographySearchTerms"%>
 <%@page import="ch.inofix.referencemanager.web.internal.search.BibliographySearch"%>
+<%@page import="ch.inofix.referencemanager.web.internal.search.ReferenceEntriesChecker"%>
 <%@page import="ch.inofix.referencemanager.web.internal.search.ReferenceSearch"%>
 <%@page import="ch.inofix.referencemanager.web.internal.search.ReferenceSearchTerms"%>
 
@@ -49,6 +52,7 @@
 <%@page import="com.liferay.portal.kernel.json.JSONFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.json.JSONObject"%>
 <%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
+<%@page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil"%>
 <%@page import="com.liferay.portal.kernel.model.Group"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.liferay.portal.kernel.search.Document"%>
@@ -81,6 +85,7 @@
 <%@page import="java.util.Set"%>
 
 <%@page import="javax.portlet.PortletURL"%>
+<%@page import="javax.portlet.ResourceURL"%>
 
 <portlet:defineObjects />
 
