@@ -62,8 +62,8 @@ import ch.inofix.referencemanager.service.util.BibliographyUtil;
  * 
  * @author Christian Berndt
  * @created 2017-01-03 14:34
- * @modified 2017-09-27 19:30
- * @version 1.2.5
+ * @modified 2017-11-04 18:30
+ * @version 1.2.6
  *
  */
 @ManagedBean
@@ -266,6 +266,10 @@ public class ReferenceEditorView {
     /*
      * Getters and Setters
      */
+    
+    public int getBibliographiesCount() {
+        return _bibliographiesCount;
+    }
 
     public long getBibliographyId() {
         return _bibliographyId;
@@ -378,6 +382,9 @@ public class ReferenceEditorView {
         _bibliographies = new ArrayList<>();
 
         try {
+            
+            _bibliographiesCount = _reference.getBibliographyIds().length;
+            
             for (long bibliographyId : _reference.getBibliographyIds()) {
                 AssetRenderer<Bibliography> assetRenderer = assetRendererFactory.getAssetRenderer(bibliographyId);
                 Map<String, String> map = new HashMap<String, String>();
@@ -496,6 +503,7 @@ public class ReferenceEditorView {
     }
 
     private List<Map<String, String>> _bibliographies;
+    private int _bibliographiesCount;
     private long _bibliographyId;
     private String _bibTeX;
     private boolean _disabled = false;

@@ -4,8 +4,8 @@
     view.xhtml: view of the reference editor portlet
     
     Created:    2017-01-05 19:29 by Christian Berndt
-    Modified:   2017-02-04 17:01 by Christian Berndt
-    Version:    1.1.7
+    Modified:   2017-11-04 18:36 by Christian Berndt
+    Version:    1.1.8
 -->
 
 <f:view xmlns="http://www.w3.org/1999/xhtml"
@@ -173,7 +173,7 @@
                     </p:outputPanel>
                 </p:tab>
 
-                <p:tab title="#{i18n['usage']}">
+                <p:tab title="#{i18n['usages']} (#{referenceEditorView.bibliographiesCount})">
                     <p:outputPanel id="relatedBibliographies"
                         styleClass="form-group related-bibliographies">
                         <h:outputText
