@@ -2,8 +2,8 @@
     bibliography/view.jsp: display the list of bibliographies.
     
     Created:    2016-12-16 00:12 by Christian Berndt
-    Modified:   2017-10-30 14:52 by Christian Berndt
-    Version:    1.1.4
+    Modified:   2017-11-04 18:08 by Christian Berndt
+    Version:    1.1.5
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -97,25 +97,20 @@
     <liferay-ui:search-container-row
         className="ch.inofix.referencemanager.model.Bibliography"
         escapedModel="true" modelVar="bibliography">
-        
-        <portlet:renderURL var="viewURL">
-            <portlet:param name="mvcPath" value="/bibliography/edit_bibliography.jsp" />
-            <portlet:param name="redirect" value="<%=currentURL%>" />
-            <portlet:param name="bibliographyId"
-                value="<%=String.valueOf(bibliography.getBibliographyId())%>" />
-        </portlet:renderURL>
-        
+
         <%
-            Group group = null;  
-            
+            Group group = null;
+
             String userLink = null;
-                
-            portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
-                
-            boolean hasUpdatePermission = true;
             
-            int numReferences = 0; 
-                
+            String viewURL = null;
+
+            portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
+
+            boolean hasUpdatePermission = true;
+
+            int numReferences = 0;
+
             if (bibliography != null) {
 
                 group = GroupLocalServiceUtil.getGroup(bibliography.getGroupId());
@@ -130,17 +125,26 @@
                 AssetEntryServiceUtil.incrementViewCounter(Bibliography.class.getName(),
                         bibliography.getBibliographyId());
 
-                Hits referenceHits = ReferenceServiceUtil.search(themeDisplay.getUserId(), bibliography.getGroupId(),
-                        bibliography.getBibliographyId(), keywords, 0, 0, sort);
-                
+                Hits referenceHits = ReferenceServiceUtil.search(themeDisplay.getUserId(),
+                        bibliography.getGroupId(), bibliography.getBibliographyId(), keywords, 0, 0, sort);
+
                 numReferences = referenceHits.getLength();
+
+                AssetRendererFactory<Bibliography> bibliographyAssetRendererFactory = AssetRendererFactoryRegistryUtil
+                        .getAssetRendererFactoryByClass(Bibliography.class);
+
+                AssetRenderer<Bibliography> bibliographyAssetRenderer = bibliographyAssetRendererFactory
+                        .getAssetRenderer(bibliography.getBibliographyId());
+
+                viewURL = bibliographyAssetRenderer.getURLViewInContext(liferayPortletRequest,
+                        liferayPortletResponse, null);
             }
         %>
 
         <liferay-ui:search-container-column-text orderable="true"
             orderableProperty="title_sortable" valign="middle">
 
-            <aui:a cssClass="bibliography-title" href="<%=viewURL%>"
+            <aui:a cssClass="bibliography-title" href="<%= viewURL %>"
                 label="<%=bibliography.getTitle() + " (" + numReferences + ")" %>" />
                 
             <div class="description"><%=bibliography.getDescription()%></div>
