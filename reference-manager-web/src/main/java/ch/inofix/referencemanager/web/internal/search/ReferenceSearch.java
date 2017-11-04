@@ -28,8 +28,8 @@ import ch.inofix.referencemanager.model.Reference;
  * 
  * @author Christian Berndt
  * @created 2016-11-18 00:58
- * @modified 2017-09-19 22:14
- * @version 1.0.2
+ * @modified 2017-11-04 20:44
+ * @version 1.0.3
  *
  */
 public class ReferenceSearch extends SearchContainer<Reference> {
@@ -101,7 +101,14 @@ public class ReferenceSearch extends SearchContainer<Reference> {
             }
 
             setOrderableHeaders(orderableHeaders);
-            setOrderByCol(orderByCol);
+
+            if (Validator.isNotNull(orderableHeaders.get(orderByCol))) {
+                setOrderByCol(orderableHeaders.get(orderByCol));
+            } else {
+                _log.error(orderByCol + " is not an orderable header.");
+                setOrderByCol(orderByCol);
+            }
+
             setOrderByType(orderByType);
             
         } catch (Exception e) {
