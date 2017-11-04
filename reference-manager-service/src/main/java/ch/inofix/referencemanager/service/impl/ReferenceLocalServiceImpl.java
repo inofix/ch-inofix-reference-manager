@@ -93,8 +93,8 @@ import ch.inofix.referencemanager.social.ReferenceActivityKeys;
  * @author Brian Wing Shun Chan
  * @author Christian Berndt
  * @created 2016-03-28 17:08
- * @modified 2017-10-29 17:27
- * @version 1.1.2
+ * @modified 2017-10-30 15:08
+ * @version 1.1.3
  * @see ReferenceLocalServiceBaseImpl
  * @see ch.inofix.referencemanager.service.ReferenceLocalServiceUtil
  */
@@ -147,14 +147,15 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
         referencePersistence.update(reference);
 
-//        // Match user and group references against common references
-//
-//        long defaultGroupId = GetterUtil.getLong(PropsUtil.get("default.group.id"));
-//
-//        if (reference.getGroupId() != defaultGroupId) {
-//            
-//            match(reference);
-//        }
+        // Match user and group references against common references
+
+        long defaultGroupId = GetterUtil.getLong(PropsUtil.get("default.group.id"));
+
+        if (reference.getGroupId() != defaultGroupId) {
+
+            match(reference);
+
+        }
 
         // BibRefRelation
 
@@ -473,14 +474,14 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
             andOperator = true;
         }
 
-        return search(userId, groupId, bibliographyId, author, title, year, WorkflowConstants.STATUS_ANY, null, andOperator, start, end,
-                sort);
+        return search(userId, groupId, bibliographyId, author, title, year, WorkflowConstants.STATUS_ANY, null,
+                andOperator, start, end, sort);
 
     }
 
     @Override
-    public Hits search(long userId, long groupId, long bibliographyId, String author, String title, String year, int status,
-            LinkedHashMap<String, Object> params, boolean andSearch, int start, int end, Sort sort)
+    public Hits search(long userId, long groupId, long bibliographyId, String author, String title, String year,
+            int status, LinkedHashMap<String, Object> params, boolean andSearch, int start, int end, Sort sort)
             throws PortalException {
 
         if (sort == null) {
@@ -489,8 +490,8 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
         Indexer<Reference> indexer = IndexerRegistryUtil.getIndexer(Reference.class.getName());
 
-        SearchContext searchContext = buildSearchContext(userId, groupId, bibliographyId, author, title, year, status, params,
-                andSearch, start, end, sort);
+        SearchContext searchContext = buildSearchContext(userId, groupId, bibliographyId, author, title, year, status,
+                params, andSearch, start, end, sort);
 
         return indexer.search(searchContext);
     }
@@ -532,14 +533,13 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
     public Reference updateReference(long referenceId, long userId, String bibTeX, ServiceContext serviceContext)
             throws PortalException {
+
         return updateReference(referenceId, userId, bibTeX, new long[0], serviceContext);
     }
 
     @Indexable(type = IndexableType.REINDEX)
     public Reference updateReference(long referenceId, long userId, String bibTeX, long[] bibliographyIds,
             ServiceContext serviceContext) throws PortalException {
-
-        _log.info("updateReference");
 
         // Reference
 
@@ -623,10 +623,10 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
 
     }
 
-    protected SearchContext buildSearchContext(long userId, long groupId, long bibliographyId, String author, String title, String year,
-            int status, LinkedHashMap<String, Object> params, boolean andSearch, int start, int end, Sort sort)
-            throws PortalException {
-        
+    protected SearchContext buildSearchContext(long userId, long groupId, long bibliographyId, String author,
+            String title, String year, int status, LinkedHashMap<String, Object> params, boolean andSearch, int start,
+            int end, Sort sort) throws PortalException {
+
         SearchContext searchContext = new SearchContext();
 
         searchContext.setAttribute(Field.STATUS, status);
@@ -634,7 +634,7 @@ public class ReferenceLocalServiceImpl extends ReferenceLocalServiceBaseImpl {
         if (Validator.isNotNull(author)) {
             searchContext.setAttribute("author", author);
         }
-        
+
         if (bibliographyId > 0) {
             searchContext.setAttribute("bibliographyId", bibliographyId);
         }

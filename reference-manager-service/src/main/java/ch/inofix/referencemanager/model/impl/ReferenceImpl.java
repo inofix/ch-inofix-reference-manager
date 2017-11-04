@@ -53,8 +53,8 @@ import ch.inofix.referencemanager.service.BibRefRelationLocalServiceUtil;
  * @author Brian Wing Shun Chan
  * @author Christian Berndt
  * @created 2016-03-29 14:43
- * @modified 2017-02-07 18:38
- * @version 1.1.0
+ * @modified 2017-11-04 16:27
+ * @version 1.1.1
  */
 @SuppressWarnings("serial")
 @ProviderType
@@ -239,23 +239,23 @@ public class ReferenceImpl extends ReferenceBaseImpl {
         // names[3] = jr;
 
         StringBuilder sb = new StringBuilder();
-        
-        if (Validator.isNotNull(nameParts[2])) {           
+
+        if (Validator.isNotNull(nameParts[2])) {
             sb.append(nameParts[2]);
         }
-        
+
         if (Validator.isNotNull(nameParts[0])) {
+
             sb.append(StringPool.COMMA);
             sb.append(StringPool.SPACE);
-            sb.append(nameParts[0].substring(0, 1));
+            sb.append(nameParts[0].trim().substring(0, 1));
             sb.append(StringPool.PERIOD);
-            
+
             if (Validator.isNotNull(nameParts[1])) {
                 sb.append(StringPool.SPACE);
                 sb.append(nameParts[1]);
             }
         }
-
 
         if (Validator.isNotNull(nameParts[3])) {
             // TODO: how do we handle the jr part?

@@ -2,8 +2,8 @@
     bibliography/view.jsp: display the list of bibliographies.
     
     Created:    2016-12-16 00:12 by Christian Berndt
-    Modified:   2017-10-29 19:32 by Christian Berndt
-    Version:    1.1.3
+    Modified:   2017-10-30 14:52 by Christian Berndt
+    Version:    1.1.4
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -20,8 +20,9 @@
         hasAddPermission = BibliographyManagerPortletPermission.contains(permissionChecker, userGroupId,
                 BibliographyActionKeys.ADD_BIBLIOGRAPHY);
     }
-    boolean isUserGroup = themeDisplay.getScopeGroupId() == userGroupId;
-
+    
+    boolean isUserScope = themeDisplay.getScopeGroup().isUser(); 
+    
     String keywords = null;
 
     SearchContainer<Bibliography> bibliographySearch = new BibliographySearch(renderRequest, "cur", portletURL);
@@ -40,7 +41,7 @@
 
     Hits hits = null;
 
-    if (isUserGroup) {
+    if (isUserScope) {
         
         hits = BibliographyServiceUtil.search(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), -1, keywords,
                 bibliographySearch.getStart(), bibliographySearch.getEnd(), sort);
@@ -74,12 +75,14 @@
 
 <div class="bibliography-head">
     <c:choose>
-        <c:when test="<%= isUserGroup %>">
+        <c:when test="<%= isUserScope && themeDisplay.getUser().getFullName().equals(userName)  %>">
             <h2><liferay-ui:message key="your-bibliographies"/></h2>
+        </c:when>
+        <c:when test="<%= isUserScope && !themeDisplay.getUser().getFullName().equals(userName)  %>">
+            <h2><liferay-ui:message key="bibliographies-of-x" arguments="<%= new String[] {userName} %>"/></h2>
         </c:when>
         <c:otherwise>
             <h2><liferay-ui:message key="bibliographies"/></h2>
-<%--             <h2><liferay-ui:message key="bibliographies-of-x" arguments="<%= new String[] {userName} %>"/></h2> --%>
         </c:otherwise>
     </c:choose>
 </div>
@@ -103,36 +106,36 @@
         </portlet:renderURL>
         
         <%
-                    Group group = null;  
-                    
-                    String userLink = null;
-                        
-                    portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
-                        
-                    boolean hasUpdatePermission = true;
-                    
-                    int numReferences = 0; 
-                        
-                    if (bibliography != null) {
+            Group group = null;  
+            
+            String userLink = null;
+                
+            portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
+                
+            boolean hasUpdatePermission = true;
+            
+            int numReferences = 0; 
+                
+            if (bibliography != null) {
 
-                        group = GroupLocalServiceUtil.getGroup(bibliography.getGroupId());
-                        userLink = "<a href=\"" + group.getDisplayURL(themeDisplay) + "\">" + bibliography.getUserName()
-                                + "</a>";
+                group = GroupLocalServiceUtil.getGroup(bibliography.getGroupId());
+                userLink = "<a href=\"" + group.getDisplayURL(themeDisplay) + "\">" + bibliography.getUserName()
+                        + "</a>";
 
-                        hasUpdatePermission = BibliographyPermission.contains(permissionChecker, bibliography,
-                                BibliographyActionKeys.UPDATE);
-                        tabNames = "browse,import,settings";
-                        portletURL.setParameter("bibliographyId", String.valueOf(bibliography.getBibliographyId()));
-                        tabs1 = ParamUtil.getString(request, "tabs1", "browse");
-                        AssetEntryServiceUtil.incrementViewCounter(Bibliography.class.getName(),
-                                bibliography.getBibliographyId());
+                hasUpdatePermission = BibliographyPermission.contains(permissionChecker, bibliography,
+                        BibliographyActionKeys.UPDATE);
+                tabNames = "browse,import,settings";
+                portletURL.setParameter("bibliographyId", String.valueOf(bibliography.getBibliographyId()));
+                tabs1 = ParamUtil.getString(request, "tabs1", "browse");
+                AssetEntryServiceUtil.incrementViewCounter(Bibliography.class.getName(),
+                        bibliography.getBibliographyId());
 
-                        Hits referenceHits = ReferenceServiceUtil.search(themeDisplay.getUserId(), bibliography.getGroupId(),
-                                bibliography.getBibliographyId(), keywords, 0, 0, sort);
-                        
-                        numReferences = referenceHits.getLength();
-                    }
-                %>
+                Hits referenceHits = ReferenceServiceUtil.search(themeDisplay.getUserId(), bibliography.getGroupId(),
+                        bibliography.getBibliographyId(), keywords, 0, 0, sort);
+                
+                numReferences = referenceHits.getLength();
+            }
+        %>
 
         <liferay-ui:search-container-column-text orderable="true"
             orderableProperty="title_sortable" valign="middle">
