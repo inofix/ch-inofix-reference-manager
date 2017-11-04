@@ -63,8 +63,8 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
  * 
  * @author Christian Berndt
  * @created 2016-04-10 22:32
- * @modified 2017-10-17 18:28
- * @version 1.1.6
+ * @modified 2017-11-04 19:03
+ * @version 1.1.7
  */
 @Component(configurationPid = "ch.inofix.referencemanager.web.configuration.ReferenceManagerConfiguration", 
     immediate = true, 
@@ -75,7 +75,7 @@ import ch.inofix.referencemanager.web.internal.portlet.util.PortletUtil;
         "com.liferay.portlet.header-portlet-css=/css/main.css",
         "com.liferay.portlet.instanceable=false", 
         "javax.portlet.init-param.template-path=/",
-        "javax.portlet.init-param.view-template=/view.jsp", 
+        "javax.portlet.init-param.view-template=/reference/view.jsp", 
         "javax.portlet.name=" + PortletKeys.REFERENCE_MANAGER,
         "javax.portlet.resource-bundle=content.Language",
         "javax.portlet.security-role-ref=power-user,user" 

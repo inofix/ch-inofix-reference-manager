@@ -2,8 +2,8 @@
     bibliography_entries.jsp: browse the bibliography's references.
     
     Created:    2016-12-03 15:50 by Christian Berndt
-    Modified:   2017-10-29 13:58 by Christian Berndt
-    Version:    1.2.3
+    Modified:   2017-11-04 19:07 by Christian Berndt
+    Version:    1.2.4
 --%>
 
 <%@ include file="/init.jsp" %>
@@ -115,7 +115,7 @@
         className="ch.inofix.referencemanager.model.Reference"
         escapedModel="true" modelVar="reference">
 
-        <%@ include file="/search_columns.jspf" %>     
+        <%@ include file="/reference/search_columns.jspf" %>     
         
         <liferay-ui:search-container-column-jsp cssClass="entry-action"
              path="/reference/reference_action.jsp" valign="top" />

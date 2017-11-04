@@ -63,18 +63,20 @@
 <c:choose>
 
 	<c:when test='<%= tabs1.equals("import") %>'>
-        <liferay-util:include page="/import_references.jsp" servletContext="<%= application %>" />
+        <liferay-util:include page="/reference/import_references.jsp" servletContext="<%= application %>" />
 	</c:when>
 	
     <c:when test='<%= tabs1.equals("manage") %>'>
-        <liferay-util:include page="/manage.jsp" servletContext="<%= application %>" />
+        <liferay-util:include page="/reference/manage.jsp" servletContext="<%= application %>" />
     </c:when>		
 
 	<c:otherwise>
 
+        <%-- 
         <div class="search-results">
             <liferay-ui:search-speed hits="<%= hits %>" searchContainer="<%= referenceSearch %>" />
         </div>
+        --%>
 
         <liferay-ui:search-container
             cssClass="references-search-container"            
@@ -86,7 +88,7 @@
 				className="ch.inofix.referencemanager.model.Reference"
 				escapedModel="true" modelVar="reference">
                 
-                <%@ include file="/search_columns.jspf" %>
+                <%@ include file="/reference/search_columns.jspf" %>
  
                 <liferay-ui:search-container-column-jsp cssClass="entry-action"
                      path="/reference/reference_action.jsp" valign="top" />
