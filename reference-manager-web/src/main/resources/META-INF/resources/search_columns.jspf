@@ -2,8 +2,8 @@
     search_columns.jspf: search_columns of the reference manager portlet.
     
     Created:    2016-12-03 16:20 by Christian Berndt
-    Modified:   2017-02-11 18:50 by Christian Berndt
-    Version:    1.0.9
+    Modified:   2017-11-04 18:10 by Christian Berndt
+    Version:    1.1.0
 --%>
 
 <%
@@ -27,6 +27,11 @@
 
     if (ReferencePermission.contains(permissionChecker, reference, ReferenceActionKeys.UPDATE)) {
         detailURL = editURL.toString();
+    }
+    
+    String type = reference.getType(); 
+    if (type != null) {
+        type = type.toLowerCase(); 
     }
 
     for (String column : columns) {
@@ -96,8 +101,7 @@
 
 <c:if test='<%="type".equals(column)%>'>
     <liferay-ui:search-container-column-text href="<%=detailURL%>"
-        orderable="true" orderableProperty="type_sortable"
-        property="type" />
+        orderable="true" orderableProperty="type_sortable" value="<%= type %>" />
 </c:if>
 
 <c:if test='<%="year".equals(column)%>'>
