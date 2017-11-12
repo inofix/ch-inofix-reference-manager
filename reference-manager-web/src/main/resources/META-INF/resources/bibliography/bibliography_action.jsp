@@ -2,8 +2,8 @@
     bibliography_action.jsp: The action menu of the bibliography manager's default view.
     
     Created:    2017-01-25 11:42 by Christian Berndt
-    Modified:   2017-10-12 18:54 by Christian Berndt
-    Version:    1.0.2
+    Modified:   2017-11-12 22:32 by Christian Berndt
+    Version:    1.0.3
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -22,58 +22,60 @@
     PortletURL editURL = bibliographyAssetRenderer.getURLEdit(liferayPortletRequest, liferayPortletResponse);
     editURL.setParameter("redirect", currentURL);
 
-    String viewURL = bibliographyAssetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse,
-            null);
+    String viewURL = bibliographyAssetRenderer.getURLViewInContext(liferayPortletRequest,
+            liferayPortletResponse, null);
     viewURL = HttpUtil.addParameter(viewURL, "redirect", currentURL);
 %>
 
 
-<liferay-ui:icon-menu icon=""
-    showWhenSingleIcon="true">
+<liferay-ui:icon-menu icon="" showWhenSingleIcon="true">
 
     <c:if test="<%=BibliographyPermission.contains(permissionChecker, bibliography,
-                    BibliographyActionKeys.VIEW)%>">
+                            BibliographyActionKeys.VIEW)%>">
 
-        <liferay-ui:icon iconCssClass="icon-eye-open"
-            message="view" url="<%=viewURL%>" />
+        <liferay-ui:icon iconCssClass="icon-eye-open" message="view"
+            url="<%=viewURL%>" />
 
     </c:if>
 
     <c:if test="<%=BibliographyPermission.contains(permissionChecker, bibliography,
-                    BibliographyActionKeys.UPDATE)%>">
+                            BibliographyActionKeys.UPDATE)%>">
 
-        <liferay-ui:icon iconCssClass="icon-edit"
-            message="edit" url="<%=editURL.toString()%>" />
+        <liferay-ui:icon iconCssClass="icon-edit" message="edit"
+            url="<%=editURL.toString()%>" />
 
     </c:if>
 
     <c:if test="<%=BibliographyPermission.contains(permissionChecker, bibliography,
-                    BibliographyActionKeys.DELETE)%>">
+                            BibliographyActionKeys.DELETE)%>">
 
-        <portlet:actionURL var="deleteURL">
-            <portlet:param name="<%= Constants.CMD %>"
-                value="deleteBibliographies"/>
+        <portlet:actionURL name="editBibliography" var="deleteURL">
+            <portlet:param name="<%=Constants.CMD%>"
+                value="<%=Constants.DELETE%>" />
             <portlet:param name="bibliographyId"
                 value="<%=String.valueOf(bibliography.getBibliographyId())%>" />
+            <portlet:param name="mvcRenderCommandName"
+                value="editBibliography" />
             <portlet:param name="redirect" value="<%=currentURL%>" />
         </portlet:actionURL>
 
-        <liferay-ui:icon-delete message="delete"
-            url="<%=deleteURL%>" />
+        <liferay-ui:icon-delete message="delete" url="<%=deleteURL%>" />
 
     </c:if>
-    
-    <c:if test="<%= BibliographyPermission.contains(permissionChecker, bibliography, BibliographyActionKeys.PERMISSIONS) %>">
+
+    <c:if test="<%=BibliographyPermission.contains(permissionChecker, bibliography,
+                            BibliographyActionKeys.PERMISSIONS)%>">
 
         <liferay-security:permissionsURL
-            modelResource="<%= Bibliography.class.getName() %>"
-            modelResourceDescription="<%= bibliography.getTitle() %>"
-            resourcePrimKey="<%= String.valueOf(bibliography.getBibliographyId()) %>"
+            modelResource="<%=Bibliography.class.getName()%>"
+            modelResourceDescription="<%=bibliography.getTitle()%>"
+            resourcePrimKey="<%=String.valueOf(bibliography.getBibliographyId())%>"
             var="permissionsEntryURL"
-            windowState="<%= LiferayWindowState.POP_UP.toString() %>" />
+            windowState="<%=LiferayWindowState.POP_UP.toString()%>" />
 
-        <liferay-ui:icon iconCssClass="icon-cog" message="permissions" method="get"
-            url="<%= permissionsEntryURL %>" useDialog="<%= true %>" />
-    </c:if>   
+        <liferay-ui:icon iconCssClass="icon-cog" message="permissions"
+            method="get" url="<%=permissionsEntryURL%>"
+            useDialog="<%=true%>" />
+    </c:if>
 
 </liferay-ui:icon-menu>

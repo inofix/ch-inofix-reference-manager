@@ -140,33 +140,33 @@ public class ReferenceManagerPortlet extends MVCPortlet {
         }
     }
 
-    @Override
-    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
-
-        String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
-
-        _log.info("processAction()");
-        _log.info("cmd = " + cmd);
-        
-        try {
-            if (cmd.equals("deleteReferences")) {
-                
-                deleteReferences(actionRequest, actionResponse);
-
-            } else if (cmd.equals("deleteGroupReferences")) {
-                
-                deleteGroupReferences(actionRequest, actionResponse);
-
-            }
-        } catch (Exception e) {
-
-            // TODO: improve error handling
-            _log.error(e);
-            
-//            throw new Exception(e);
-
-        }
-    }
+//    @Override
+//    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
+//
+//        String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
+//
+//        _log.info("processAction()");
+//        _log.info("cmd = " + cmd);
+//        
+//        try {
+//            if (cmd.equals("deleteReferences")) {
+//                
+//                deleteReferences(actionRequest, actionResponse);
+//
+//            } else if (cmd.equals("deleteGroupReferences")) {
+//                
+//                deleteGroupReferences(actionRequest, actionResponse);
+//
+//            }
+//        } catch (Exception e) {
+//
+//            // TODO: improve error handling
+//            _log.error(e);
+//            
+////            throw new Exception(e);
+//
+//        }
+//    }
 
     @Activate
     @Modified
