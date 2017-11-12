@@ -14,6 +14,7 @@
         <permissions>
             <supports>
                 <action-key>ADD_BIBLIOGRAPHY</action-key>
+                <action-key>DELETE_GROUP_BIBLIOGRAPHIES</action-key>
                 <action-key>IMPORT_BIBLIOGRAPHY</action-key>
                 <action-key>PERMISSIONS</action-key>
                 <action-key>VIEW</action-key>
