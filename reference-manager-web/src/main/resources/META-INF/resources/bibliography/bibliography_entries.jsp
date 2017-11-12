@@ -2,8 +2,8 @@
     bibliography_entries.jsp: browse the bibliography's references.
     
     Created:    2016-12-03 15:50 by Christian Berndt
-    Modified:   2017-11-04 19:07 by Christian Berndt
-    Version:    1.2.4
+    Modified:   2017-11-12 22:02 by Christian Berndt
+    Version:    1.2.5
 --%>
 
 <%@ include file="/init.jsp" %>
@@ -76,10 +76,10 @@
 %>
 
 <nav class="clearfix navbar">
-    
+
     <portlet:renderURL var="searchURL">
-        <portlet:param name="bibliographyId"
-            value="<%=String.valueOf(bibliographyId)%>" />
+        <portlet:param name="bibliographyId" value="<%=String.valueOf(bibliographyId)%>" />
+        <portlet:param name="mvcRenderCommandName" value="editBibliography" />
         <portlet:param name="mvcPath" value="/bibliography/edit_bibliography.jsp" />
         <portlet:param name="tabs1" value="browse" />
     </portlet:renderURL>
@@ -117,7 +117,7 @@
 
         <%@ include file="/reference/search_columns.jspf" %>     
         
-        <liferay-ui:search-container-column-jsp cssClass="entry-action"
+        <liferay-ui:search-container-column-jsp align="right" cssClass="entry-action"
              path="/reference/reference_action.jsp" valign="top" />
 
     </liferay-ui:search-container-row>

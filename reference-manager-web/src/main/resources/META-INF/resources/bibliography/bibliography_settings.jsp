@@ -2,16 +2,15 @@
     bibliography_settings.jsp: edit the bibliography's settings.
     
     Created:    2016-12-01 02:33 by Christian Berndt
-    Modified:   2017-10-29 01:47 by Christian Berndt
-    Version:    1.0.7
+    Modified:   2017-11-12 22:05 by Christian Berndt
+    Version:    1.0.8
 --%>
 
 <%@ include file="/init.jsp"%>
 
-<%@page import="ch.inofix.referencemanager.exception.DuplicateUrlTitleException"%>
-
 <%
     long bibliographyId = ParamUtil.getLong(request, "bibliographyId");
+    String cmd = Constants.ADD;
     String redirect = ParamUtil.getString(request, "redirect");
 
     String submitLabel = "create"; 
@@ -25,6 +24,7 @@
     boolean hasUpdatePermission = true;
     
     if (bibliography != null) {
+        cmd = Constants.UPDATE;
         hasUpdatePermission = BibliographyPermission.contains(permissionChecker, bibliography,
                 BibliographyActionKeys.UPDATE);
     } else if (!themeDisplay.isSignedIn()) {
@@ -32,25 +32,24 @@
     }
 %>
 
-<portlet:actionURL var="updateBibliographyURL">
-    <portlet:param name="<%=Constants.CMD%>"
-        value="updateBibliography" />
+<portlet:actionURL name="editBibliography" var="updateBibliographyURL">
+    <portlet:param name="mvcRenderCommandName" value="editBibliography" />
 </portlet:actionURL>
 
-<aui:form action="<%= updateBibliographyURL %>" method="post"
-    name="fm">
-    
+<aui:form action="<%= updateBibliographyURL %>" method="post" name="fm">
+
     <aui:input name="bibliographyId" type="hidden"
         value="<%=bibliographyId%>" />
 
+    <aui:input name="<%= Constants.CMD %>" type="hidden"
+        value="<%= cmd %>" />
+
     <aui:input name="mvcPath" type="hidden"
         value="/bibliography/edit_bibliography.jsp" />
-        
-    <aui:input name="redirect" type="hidden"
-        value="<%=currentURL%>" />
-        
-    <aui:input name="tabs1" type="hidden"
-        value="settings" />
+
+    <aui:input name="redirect" type="hidden" value="<%=currentURL%>" />
+
+    <aui:input name="tabs1" type="hidden" value="settings" />
 
     <liferay-ui:asset-categories-error />
 
@@ -73,7 +72,8 @@
                 value="<%="/user/" + themeDisplay.getUser().getScreenName()%>" />
         </div>
 
-        <div  class="form-group form-group-inline input-text-wrapper dash">
+        <div
+            class="form-group form-group-inline input-text-wrapper dash">
             /</div>
 
         <aui:input disabled="<%=!hasUpdatePermission%>"
@@ -107,20 +107,20 @@
         <aui:field-wrapper>
             <aui:input checked="<%=!isPrivate%>" name="private" label=""
                 type="radio" value="false" />
-                
-            <span class="help-block">
-                <liferay-ui:icon cssClass="icon icon-eye-open"/>
-                <liferay-ui:message key="bibliography-private-false"/>
+
+            <span class="help-block"> <liferay-ui:icon
+                    cssClass="icon icon-eye-open" /> <liferay-ui:message
+                    key="bibliography-private-false" />
             </span>
         </aui:field-wrapper>
-            
+
         <aui:field-wrapper>
             <aui:input checked="<%=isPrivate%>" name="private" label=""
                 type="radio" value="true" disabled="true" />
-                
-            <span class="help-block text-muted">
-                <liferay-ui:icon cssClass="icon icon-lock"/>
-                <liferay-ui:message key="bibliography-private-true"/>
+
+            <span class="help-block text-muted"> <liferay-ui:icon
+                    cssClass="icon icon-lock" /> <liferay-ui:message
+                    key="bibliography-private-true" />
             </span>
         </aui:field-wrapper>
 
@@ -135,7 +135,7 @@
             </c:when>
             <c:otherwise>
                 <aui:field-wrapper name="categories" inlineLabel="false">
-                    <c:if test="<%= bibliography != null %>">                          
+                    <c:if test="<%= bibliography != null %>">
                         <liferay-ui:asset-categories-summary
                             classPK="<%=bibliography.getBibliographyId()%>"
                             className="<%=Bibliography.class.getName()%>" />
@@ -145,10 +145,9 @@
         </c:choose>
 
         <p class="help-block">
-            <liferay-ui:message
-                key="bibliography-categories-help" />
+            <liferay-ui:message key="bibliography-categories-help" />
         </p>
-        
+
         <c:choose>
             <c:when test="<%=hasUpdatePermission%>">
                 <aui:input name="tags" type="assetTags" />
@@ -163,12 +162,11 @@
                 </aui:field-wrapper>
             </c:otherwise>
         </c:choose>
-                    
+
         <p class="help-block">
-            <liferay-ui:message
-                key="bibliography-tags-help" />
+            <liferay-ui:message key="bibliography-tags-help" />
         </p>
-            
+
     </aui:fieldset>
 
     <aui:fieldset>
@@ -195,11 +193,10 @@
     </aui:fieldset>
 
     <aui:button-row>
-        <aui:button
-            disabled="<%=!hasUpdatePermission%>" type="submit" value="<%= submitLabel %>" />
+        <aui:button disabled="<%=!hasUpdatePermission%>" type="submit"
+            value="<%= submitLabel %>" />
 
-        <aui:button 
-            disabled="<%=!hasUpdatePermission%>"
+        <aui:button disabled="<%=!hasUpdatePermission%>"
             href="<%=redirect%>" type="cancel" />
     </aui:button-row>
 

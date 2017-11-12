@@ -2,8 +2,8 @@
     import_bibliography.jsp: The import panel of bibliography manager.
     
     Created:    2016-12-01 02:50 by Christian Berndt
-    Modified:   2017-10-29 01:48 by Christian Berndt
-    Version:    1.0.7
+    Modified:   2017-11-12 22:06 by Christian Berndt
+    Version:    1.0.8
 --%>
 
 <%@ include file="/init.jsp" %>
@@ -19,9 +19,9 @@
             BibliographyActionKeys.IMPORT_BIBLIOGRAPHY);
 %>
 
-<portlet:actionURL var="importBibliographyURL">
-    <portlet:param name="<%=Constants.CMD%>"
-        value="importBibliography" />
+<portlet:actionURL name="editBibliography" var="importBibliographyURL">
+    <portlet:param name="<%=Constants.CMD%>" value="importBibliography" />
+    <portlet:param name="mvcRenderCommandName" value="editBibliography" />
 </portlet:actionURL>
 
 <aui:form action="<%=importBibliographyURL%>"

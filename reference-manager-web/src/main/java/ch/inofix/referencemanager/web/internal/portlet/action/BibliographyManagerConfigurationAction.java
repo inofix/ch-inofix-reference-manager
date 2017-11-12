@@ -38,7 +38,7 @@ import ch.inofix.referencemanager.web.configuration.BibliographyManagerConfigura
     }, 
     service = ConfigurationAction.class
 )
-public class BibliographyMangerConfigurationAction extends DefaultConfigurationAction {
+public class BibliographyManagerConfigurationAction extends DefaultConfigurationAction {
 
     @Override
     public String getJspPath(HttpServletRequest httpServletRequest) {

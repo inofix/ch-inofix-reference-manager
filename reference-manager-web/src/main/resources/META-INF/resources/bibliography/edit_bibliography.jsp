@@ -2,8 +2,8 @@
     edit_bibliography.jsp: default view of the bibliography manager portlet.
     
     Created:    2016-11-30 00:18 by Christian Berndt
-    Modified:   2017-10-29 01:54 by Christian Berndt
-    Version:    1.1.0
+    Modified:   2017-11-12 22:11 by Christian Berndt
+    Version:    1.1.1
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -20,6 +20,7 @@
     String userLink = null;
 
     portletURL.setParameter("mvcPath", "/bibliography/edit_bibliography.jsp");
+    portletURL.setParameter("mvcRenderCommandName", "editBibliography");
 
     boolean hasUpdatePermission = true;
 
@@ -73,15 +74,28 @@
                         arguments="<%=new String[] { userLink }%>" />
 
                 </div>
-                <portlet:resourceURL id="exportBibliography"
-                    var="exportBibliographyURL">
-                    <portlet:param name="bibliographyId"
-                        value="<%=String.valueOf(bibliography.getBibliographyId())%>" />
-                </portlet:resourceURL>
+
+                <%
+                    ResourceURL downloadURL = liferayPortletResponse.createResourceURL();
+
+                    downloadURL.setResourceID("exportBibliography");
+
+                    // Copy render parameters to resourceRequest
+                    downloadURL.setParameters(renderRequest.getParameterMap());
+
+                    downloadURL.setParameter("bibliographyId", String.valueOf(bibliography.getBibliographyId()));
+                    downloadURL.setParameter("cmd", "download");
+                %>
+
+
+                <%--                 <portlet:resourceURL id="exportBibliography" var="exportBibliographyURL"> --%>
+<%--                     <portlet:param name="bibliographyId" value="<%=String.valueOf(bibliography.getBibliographyId())%>" /> --%>
+<%--                     <portlet:param name="mvcRenderCommandName" value="exportBibliography" /> --%>
+<%--                 </portlet:resourceURL> --%>
 
                 <aui:button cssClass="btn-sm pull-right"
                     icon="icon-download"
-                    href="<%=exportBibliographyURL%>"
+                    href="<%= downloadURL.toString() %>"
                     value="download" />
 
             </div>
