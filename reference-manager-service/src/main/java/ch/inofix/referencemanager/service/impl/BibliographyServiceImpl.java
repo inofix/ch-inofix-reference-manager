@@ -14,6 +14,8 @@
 
 package ch.inofix.referencemanager.service.impl;
 
+import java.util.List;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -52,8 +54,8 @@ import ch.inofix.referencemanager.service.permission.BibliographyPermission;
  *
  * @author Christian Berndt
  * @created 2016-11-29 21:27
- * @modified 2017-09-27 19:34
- * @version 1.0.7
+ * @modified 2017-11-12 21:22
+ * @version 1.0.8
  * @see BibliographyServiceBaseImpl
  * @see ch.inofix.referencemanager.service.BibliographyServiceUtil
  */
@@ -100,6 +102,15 @@ public class BibliographyServiceImpl extends BibliographyServiceBaseImpl {
 
         return bibliographyLocalService.deleteBibliography(bibliographyId);
 
+    }
+    
+    @Override
+    public List<Bibliography> deleteGroupBibliographies(long groupId) throws PortalException {
+
+        BibliographyManagerPortletPermission.check(getPermissionChecker(), groupId,
+                BibliographyActionKeys.DELETE_GROUP_BIBLIOGRAPHIES);
+
+        return bibliographyLocalService.deleteGroupBibliographies(groupId);
     }
 
     /**

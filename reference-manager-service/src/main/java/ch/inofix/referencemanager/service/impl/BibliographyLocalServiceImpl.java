@@ -62,8 +62,8 @@ import ch.inofix.referencemanager.social.BibliographyActivityKeys;
  *
  * @author Christian Berndt
  * @created 2016-11-29 21:27
- * @modified 2017-09-14 10:48
- * @version 1.0.7
+ * @modified 2017-11-12 21:28
+ * @version 1.0.8
  * @see BibliographyLocalServiceBaseImpl
  * @see ch.inofix.referencemanager.service.BibliographyLocalServiceUtil
  */
@@ -189,6 +189,24 @@ public class BibliographyLocalServiceImpl extends BibliographyLocalServiceBaseIm
         Bibliography bibliography = bibliographyPersistence.findByPrimaryKey(bibliographyId);
 
         return bibliographyLocalService.deleteBibliography(bibliography);
+    }
+    
+    @Override
+    public List<Bibliography> deleteGroupBibliographies(long groupId) throws PortalException {
+
+        List<Bibliography> bibliographies = bibliographyPersistence.findByGroupId(groupId);
+
+        for (Bibliography bibliography : bibliographies) {
+
+            try {
+                deleteBibliography(bibliography);
+            } catch (Exception e) {
+                _log.error(e);
+            }
+        }
+
+        return bibliographies;
+
     }
 
     public List<Bibliography> getGroupBibliographies(long groupId) throws PortalException, SystemException {
