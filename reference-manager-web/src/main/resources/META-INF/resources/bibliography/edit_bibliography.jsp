@@ -75,27 +75,13 @@
 
                 </div>
 
-                <%
-                    ResourceURL downloadURL = liferayPortletResponse.createResourceURL();
-
-                    downloadURL.setResourceID("exportBibliography");
-
-                    // Copy render parameters to resourceRequest
-                    downloadURL.setParameters(renderRequest.getParameterMap());
-
-                    downloadURL.setParameter("bibliographyId", String.valueOf(bibliography.getBibliographyId()));
-                    downloadURL.setParameter("cmd", "download");
-                %>
-
-
-                <%--                 <portlet:resourceURL id="exportBibliography" var="exportBibliographyURL"> --%>
-<%--                     <portlet:param name="bibliographyId" value="<%=String.valueOf(bibliography.getBibliographyId())%>" /> --%>
-<%--                     <portlet:param name="mvcRenderCommandName" value="exportBibliography" /> --%>
-<%--                 </portlet:resourceURL> --%>
+                <portlet:resourceURL id="exportBibliography" var="exportBibliographyURL">
+                    <portlet:param name="bibliographyId" value="<%=String.valueOf(bibliography.getBibliographyId())%>" />
+                </portlet:resourceURL>
 
                 <aui:button cssClass="btn-sm pull-right"
                     icon="icon-download"
-                    href="<%= downloadURL.toString() %>"
+                    href="<%= exportBibliographyURL.toString() %>"
                     value="download" />
 
             </div>
