@@ -2,8 +2,8 @@
     bibliography_action.jsp: The action menu of the bibliography manager's default view.
     
     Created:    2017-01-25 11:42 by Christian Berndt
-    Modified:   2017-11-12 22:32 by Christian Berndt
-    Version:    1.0.3
+    Modified:   2017-11-13 14:20 by Christian Berndt
+    Version:    1.0.4
 --%>
 
 <%@ include file="/init.jsp"%>
@@ -35,6 +35,18 @@
 
         <liferay-ui:icon iconCssClass="icon-eye-open" message="view"
             url="<%=viewURL%>" />
+
+    </c:if>
+    
+    <c:if test="<%=BibliographyPermission.contains(permissionChecker, bibliography,
+                        BibliographyActionKeys.VIEW)%>">
+                        
+        <portlet:resourceURL id="exportBibliography" var="exportBibliographyURL">
+            <portlet:param name="bibliographyId" value="<%=String.valueOf(bibliography.getBibliographyId())%>" />
+        </portlet:resourceURL>
+
+        <liferay-ui:icon iconCssClass="icon-download" message="download"
+            url="<%=exportBibliographyURL.toString()%>" />
 
     </c:if>
 
